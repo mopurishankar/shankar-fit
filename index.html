@@ -69,7 +69,8 @@
                     <h2 class="text-2xl font-bold mt-2 text-white" id="today-workout-title">Chest & Triceps</h2>
                     <p class="text-sm text-slate-400 mt-1">Focus: Heavy horizontal press, upper shelf development, and tricep isolation.</p>
                 </div>
-                <div class="flex items-center gap-3 w-full sm:w-auto">
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <span id="workout-progress-counter" class="text-xs font-bold bg-emerald-950 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-800/50">0/6 Done</span>
                     <select id="day-selector" onchange="changeWorkoutDay(this.value)" class="bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
                         <option value="Monday">Monday: Chest & Triceps</option>
                         <option value="Tuesday">Tuesday: Back, Biceps & Core</option>
@@ -100,10 +101,36 @@
 
         <!-- TAB 3: PROGRESS -->
         <section id="tab-progress" class="hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-                <h2 class="text-xl font-bold text-white mb-4">Weight Gain Trajectory (52kg → 60kg)</h2>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Weight Gain Trajectory (52kg → 60kg)</h2>
+                        <p class="text-sm text-slate-400">Log your weekly progress to track lean mass gains.</p>
+                    </div>
+                    <button onclick="openWeightModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Weekly Weigh-In</button>
+                </div>
+                
                 <div class="h-72 w-full">
                     <canvas id="weightChart"></canvas>
+                </div>
+
+                <!-- Weight Log Table -->
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <h3 class="text-lg font-bold text-white mb-3">Weigh-In History</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-800 text-slate-400 uppercase text-xs">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-l-lg">Date / Week</th>
+                                    <th class="px-4 py-3">Weight (kg)</th>
+                                    <th class="px-4 py-3 rounded-r-lg text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weight-table-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -112,12 +139,19 @@
     <!-- Weight Update Modal -->
     <div id="weight-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
-            <h3 class="text-lg font-bold text-white">Log Current Weight</h3>
-            <p class="text-sm text-slate-400">Track your progress toward your January 15 goal.</p>
-            <input type="number" step="0.1" id="modal-weight-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. 52.5">
+            <h3 class="text-lg font-bold text-white">Log Weekly Weight</h3>
+            <p class="text-sm text-slate-400">Record your weight and date to update your progress chart.</p>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Date / Label</label>
+                <input type="text" id="modal-date-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. Nov 24">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Weight (kg)</label>
+                <input type="number" step="0.1" id="modal-weight-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. 52.5">
+            </div>
             <div class="flex justify-end gap-3 pt-2">
                 <button onclick="closeWeightModal()" class="px-4 py-2 text-slate-400 hover:text-white text-sm font-medium">Cancel</button>
-                <button onclick="saveNewWeight()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">Save Weight</button>
+                <button onclick="saveNewWeight()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">Save Entry</button>
             </div>
         </div>
     </div>
@@ -194,6 +228,8 @@
             { date: 'Nov 17', weight: 52.0 }
         ];
 
+        let currentDay = 'Monday';
+        let completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
         let chartInstance = null;
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -202,6 +238,10 @@
             renderDiet();
             initChart();
             updateDisplayWeight();
+            renderWeightTable();
+            
+            // Set default date input in modal to today's approximate date
+            document.getElementById('modal-date-input').value = 'Nov 17';
         });
 
         function calculateDaysLeft() {
@@ -225,8 +265,16 @@
         }
 
         function changeWorkoutDay(day) {
+            currentDay = day;
             document.getElementById('today-day-label').innerText = day;
+            completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
             renderWorkout(day);
+        }
+
+        function toggleExercise(idx) {
+            completedExercises[idx] = !completedExercises[idx];
+            localStorage.setItem('shankar_completed_' + currentDay, JSON.stringify(completedExercises));
+            renderWorkout(currentDay);
         }
 
         function renderWorkout(day) {
@@ -234,23 +282,33 @@
             document.getElementById('today-workout-title').innerText = data.title;
             const container = document.getElementById('exercise-cards-container');
             container.innerHTML = '';
+            
+            let completedCount = 0;
             data.exercises.forEach((ex, idx) => {
+                const isChecked = completedExercises[idx] || false;
+                if(isChecked) completedCount++;
+
                 container.innerHTML += `
-                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col justify-between hover:border-slate-700 transition">
+                    <div class="bg-slate-900 border ${isChecked ? 'border-emerald-600/60 bg-emerald-950/20' : 'border-slate-800'} rounded-xl p-4 flex flex-col justify-between transition">
                         <div>
                             <div class="flex justify-between items-center mb-2">
                                 <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded">${idx+1} Var</span>
                                 <span class="text-xs text-slate-400">${ex.sets}</span>
                             </div>
-                            <h3 class="font-bold text-white text-base">${ex.name}</h3>
+                            <div class="flex items-start justify-between gap-3">
+                                <h3 class="font-bold ${isChecked ? 'line-through text-slate-400' : 'text-white'} text-base">${ex.name}</h3>
+                                <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleExercise(${idx})" class="w-5 h-5 accent-emerald-500 rounded cursor-pointer mt-1">
+                            </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
                             <span>Type: ${ex.type}</span>
-                            <span class="text-emerald-400 font-medium">Active Set</span>
+                            <span class="${isChecked ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isChecked ? 'Completed ✓' : 'Pending'}</span>
                         </div>
                     </div>
                 `;
             });
+
+            document.getElementById('workout-progress-counter').innerText = `${completedCount}/${data.exercises.length} Done`;
         }
 
         function renderDiet() {
@@ -306,6 +364,22 @@
             });
         }
 
+        function renderWeightTable() {
+            const tbody = document.getElementById('weight-table-body');
+            tbody.innerHTML = '';
+            weightHistory.forEach((entry, idx) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
+                        <td class="px-4 py-3 font-medium text-white">${entry.date}</td>
+                        <td class="px-4 py-3 font-bold text-emerald-400">${entry.weight.toFixed(1)} kg</td>
+                        <td class="px-4 py-3 text-right">
+                            <button onclick="deleteWeightEntry(${idx})" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 px-2.5 py-1 rounded border border-red-900/50 transition">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
         function openWeightModal() {
             document.getElementById('weight-modal').classList.remove('hidden');
             document.getElementById('weight-modal').classList.add('flex');
@@ -317,16 +391,36 @@
         }
 
         function saveNewWeight() {
-            const val = parseFloat(document.getElementById('modal-weight-input').value);
-            if(!isNaN(val)) {
-                const todayStr = 'Nov ' + new Date().getDate();
-                weightHistory.push({ date: todayStr, weight: val });
+            const dateVal = document.getElementById('modal-date-input').value.trim();
+            const weightVal = parseFloat(document.getElementById('modal-weight-input').value);
+            
+            if(dateVal && !isNaN(weightVal)) {
+                weightHistory.push({ date: dateVal, weight: weightVal });
                 localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
+                
                 updateDisplayWeight();
+                renderWeightTable();
+                
                 chartInstance.data.labels = weightHistory.map(w => w.date);
                 chartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
                 chartInstance.update();
+                
                 closeWeightModal();
+                document.getElementById('modal-weight-input').value = '';
+            }
+        }
+
+        function deleteWeightEntry(idx) {
+            if(weightHistory.length > 1) {
+                weightHistory.splice(idx, 1);
+                localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
+                updateDisplayWeight();
+                renderWeightTable();
+                chartInstance.data.labels = weightHistory.map(w => w.date);
+                chartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
+                chartInstance.update();
+            } else {
+                alert("You must keep at least one weight entry!");
             }
         }
 
