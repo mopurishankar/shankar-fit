@@ -1,5 +1,5 @@
 {
-  "name": "Shankar Fit Pro",
+  "name": "Shankar Fit",
   "short_name": "Shankar Fit",
   "start_url": "./index.html",
   "display": "standalone",
@@ -7,14 +7,9 @@
   "theme_color": "#10b981",
   "icons": [
     {
-      "src": "https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f4aa.png",
-      "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "https://raw.githubusercontent.com/twitter/twemoji/master/assets/512x512/1f4aa.png",
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='110' fill='%23030712'/><text x='50%' y='50%' font-family='Arial, sans-serif' font-weight='900' font-size='220' fill='%2310b981' dominant-baseline='central' text-anchor='middle'>SF</text></svg>",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
   ]
 }
