@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shankar Fit - Bulking & Workout Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#070b14',
+                        cardbg: '#0f172a',
+                        cardborder: '#1e293b',
+                        neoncyan: '#06b6d4',
+                        neonpink: '#ec4899',
+                        neongreen: '#10b981',
+                        neonpurple: '#8b5cf6',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #070b14;
+            color: #f1f5f9;
+            -webkit-tap-highlight-color: transparent;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070b14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        .neon-glow-cyan {
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+        }
+        .neon-glow-pink {
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+        }
+        .neon-glow-green {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-darkbg text-gray-100 flex flex-col pb-20 selection:bg-cyan-500 selection:text-black">
+
+    <!-- Header / Navbar -->
+    <header class="border-b border-cardborder bg-cardbg/90 backdrop-blur-md sticky top-0 z-50 px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-emerald-400 flex items-center justify-center neon-glow-cyan text-darkbg font-extrabold text-xl shadow-lg">
+                <i class="fa-solid fa-dumbbell"></i>
+            </div>
+            <div>
+                <h1 class="text-base sm:text-lg font-bold tracking-wider text-white flex items-center gap-2">
+                    SHANKAR <span class="text-cyan-400">FIT</span> 
+                </h1>
+                <p class="text-[11px] text-gray-400 font-mono">Owner: Mopuri Shankar | <span class="text-emerald-400 font-bold" id="headerWeight">52</span>kg → 60kg</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <button onclick="openTimerModal()" class="px-3 py-1.5 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-mono flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-stopwatch"></i> <span id="timerButtonText">Timer</span>
+            </button>
+            <button onclick="resetDailyData()" class="p-2 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs transition" title="Reset Today">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Bottom Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-cardbg/95 backdrop-blur-lg border-t border-cardborder z-40 px-4 py-2 flex justify-around items-center md:hidden">
+        <button onclick="switchTab('workout')" id="nav-btn-workout" class="flex flex-col items-center text-cyan-400 transition">
+            <i class="fa-solid fa-dumbbell text-lg mb-0.5"></i>
+            <span class="text-[10px] font-mono">Workout</span>
+        </button>
+        <button onclick="switchTab('diet')" id="nav-btn-diet" class="flex flex-col items-center text-gray-400 hover:text-gray-200 transition">
+            <i class="fa-solid fa-utensils text-lg mb-0.5"></i>
+            <span class="text-[10px] font-mono">Diet & Bulking</span>
+        </button>
+        <button onclick="switchTab('progress')" id="nav-btn-progress" class="flex flex-col items-center text-gray-400 hover:text-gray-200 transition">
+            <i class="fa-solid fa-chart-line text-lg mb-0.5"></i>
+            <span class="text-[10px] font-mono">Goal / Weight</span>
+        </button>
+        <button onclick="switchTab('wellness')" id="nav-btn-wellness" class="flex flex-col items-center text-gray-400 hover:text-gray-200 transition">
+            <i class="fa-solid fa-spa text-lg mb-0.5"></i>
+            <span class="text-[10px] font-mono">Skin & Water</span>
+        </button>
+    </nav>
+
+    <!-- Main Dashboard Container -->
+    <main class="flex-1 max-w-4xl w-full mx-auto p-4 space-y-5 mb-10">
+
+        <!-- TAB 1: WORKOUT TRACKER -->
+        <div id="tab-content-workout" class="space-y-5">
+            
+            <!-- Quick Info Banner -->
+            <div class="bg-gradient-to-r from-cyan-950/40 to-blue-950/40 border border-cyan-900/50 rounded-2xl p-4 flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-mono text-cyan-400 uppercase tracking-widest">Daily Training Rule</span>
+                    <h2 class="text-sm font-bold text-white">6 Precise Exercise Variations</h2>
+                </div>
+                <div class="text-right font-mono text-xs text-gray-300">
+                    <span id="dateDisplay">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Day Selector Carousel -->
+            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
+                <button onclick="switchWorkoutDay('Mon')" id="split-tab-Mon" class="px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cyan-500 text-darkbg shadow-lg shadow-cyan-500/20">Mon: Chest & Triceps</button>
+                <button onclick="switchWorkoutDay('Tue')" id="split-tab-Tue" class="px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cardbg border border-cardborder text-gray-400 hover:text-white">Tue: Back, Biceps, Core</button>
+                <button onclick="switchWorkoutDay('Wed')" id="split-tab-Wed" class="px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cardbg border border-cardborder text-gray-400 hover:text-white">Wed: Shoulders & Core</button>
+                <button onclick="switchWorkoutDay('Thu')" id="split-tab-Thu" class="px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cardbg border border-cardborder text-gray-400 hover:text-white">Thu: Chest, Triceps, Forearms</button>
+                <button onclick="switchWorkoutDay('Fri')" id="split-tab-Fri" class="px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cardbg border border-cardborder text-gray-400 hover:text-white">Fri: Back, Biceps, Core</button>
+                <button onclick="switchWorkoutDay('Sat')" id="split-tab-Sat" class="px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cardbg border border-cardborder text-gray-400 hover:text-white">Sat: Legs & Shoulders</button>
+            </div>
+
+            <!-- Active Workout Card -->
+            <section class="bg-cardbg border border-cardborder rounded-2xl p-4 sm:p-6 shadow-xl">
+                <div class="flex items-center justify-between pb-4 mb-4 border-b border-cardborder">
+                    <div>
+                        <h2 id="activeWorkoutTitle" class="text-base sm:text-lg font-bold text-white">Monday: Chest & Triceps</h2>
+                        <p class="text-xs text-gray-400">Complete all 6 variations with optimal form and rest intervals.</p>
+                    </div>
+                    <span id="workoutProgressBadge" class="text-xs font-mono bg-cyan-950 text-cyan-300 border border-cyan-800 px-3 py-1 rounded-full">0/6 Done</span>
+                </div>
+
+                <!-- Exercise List -->
+                <div id="exerciseListContainer" class="space-y-3">
+                    <!-- Injected via JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 2: DIET & BULKING TRACKER -->
+        <div id="tab-content-diet" class="space-y-5 hidden">
+            <section class="bg-cardbg border border-cardborder rounded-2xl p-4 sm:p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 border-b border-cardborder">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-utensils text-emerald-400"></i> Shankar's Bulking Staples
+                        </h2>
+                        <p class="text-xs text-gray-400">Target: 3,200+ kcal daily (Dal, Aloo, Soybean, Oatmeal, Eggs, Chicken)</p>
+                    </div>
+                    <div class="bg-darkbg border border-cardborder px-4 py-2 rounded-xl text-right font-mono">
+                        <span id="totalCalories" class="text-xl font-extrabold text-emerald-400">0</span>
+                        <span class="text-xs text-gray-400">/ 3200 kcal</span>
+                    </div>
+                </div>
+
+                <!-- Macro Bars -->
+                <div class="grid grid-cols-3 gap-3 mb-6 p-3 bg-darkbg rounded-xl border border-cardborder text-center font-mono">
+                    <div>
+                        <div class="text-[11px] text-gray-400">PROTEIN</div>
+                        <div id="totalProtein" class="text-base sm:text-lg font-bold text-cyan-400">0g</div>
+                        <div class="text-[10px] text-gray-500">Goal: 140g+</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] text-gray-400">CARBS</div>
+                        <div id="totalCarbs" class="text-base sm:text-lg font-bold text-yellow-400">0g</div>
+                        <div class="text-[10px] text-gray-500">Goal: 400g+</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] text-gray-400">FATS</div>
+                        <div id="totalFats" class="text-base sm:text-lg font-bold text-pink-400">0g</div>
+                        <div class="text-[10px] text-gray-500">Goal: 90g+</div>
+                    </div>
+                </div>
+
+                <!-- Staples Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="stapleFoodGrid">
+                    <!-- Injected via JS -->
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 3: WEIGHT & GOAL PROGRESS -->
+        <div id="tab-content-progress" class="space-y-5 hidden">
+            <!-- Goal Countdown Banner -->
+            <section class="bg-gradient-to-br from-cardbg to-cyan-950/20 border border-cardborder rounded-2xl p-5 relative overflow-hidden shadow-xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye text-pink-500"></i> Target: 60kg by Jan 15, 2026
+                        </h2>
+                        <p class="text-xs text-gray-400">Log your current body weight to track bulking velocity.</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="weightInput" step="0.1" value="52.0" class="w-24 bg-darkbg border border-cardborder rounded-xl px-3 py-2 text-white font-mono text-center focus:outline-none focus:border-cyan-500">
+                        <button onclick="updateWeight()" class="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-darkbg font-bold rounded-xl text-xs transition shadow-lg shadow-cyan-500/20">
+                            Save Weight
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="space-y-2 mt-4">
+                    <div class="flex justify-between text-xs font-mono">
+                        <span class="text-gray-400">Start: 52 kg</span>
+                        <span id="progressPercentageText" class="text-cyan-400 font-bold">0% Completed</span>
+                        <span class="text-gray-400">Target: 60 kg</span>
+                    </div>
+                    <div class="w-full bg-darkbg h-3 rounded-full overflow-hidden p-0.5 border border-cardborder">
+                        <div id="weightProgressBar" class="bg-gradient-to-r from-cyan-500 via-emerald-400 to-pink-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Milestone Milestones Cards -->
+            <section class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-xl">
+                <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-trophy text-yellow-400"></i> Bulking Milestones
+                </h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-center">
+                    <div class="p-3 bg-darkbg rounded-xl border border-cardborder">
+                        <div class="text-[10px] text-gray-400">Stage 1</div>
+                        <div class="text-base font-bold text-white">54.0 kg</div>
+                        <div id="badge-54" class="text-[10px] text-gray-500 mt-1">Pending</div>
+                    </div>
+                    <div class="p-3 bg-darkbg rounded-xl border border-cardborder">
+                        <div class="text-[10px] text-gray-400">Stage 2</div>
+                        <div class="text-base font-bold text-white">56.0 kg</div>
+                        <div id="badge-56" class="text-[10px] text-gray-500 mt-1">Pending</div>
+                    </div>
+                    <div class="p-3 bg-darkbg rounded-xl border border-cardborder">
+                        <div class="text-[10px] text-gray-400">Stage 3</div>
+                        <div class="text-base font-bold text-white">58.0 kg</div>
+                        <div id="badge-58" class="text-[10px] text-gray-500 mt-1">Pending</div>
+                    </div>
+                    <div class="p-3 bg-darkbg rounded-xl border border-cardborder">
+                        <div class="text-[10px] text-gray-400">Final Goal</div>
+                        <div class="text-base font-bold text-emerald-400">60.0 kg</div>
+                        <div id="badge-60" class="text-[10px] text-gray-500 mt-1">Pending</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 4: SKINCARE & WATER -->
+        <div id="tab-content-wellness" class="space-y-5 hidden">
+            <!-- Hydration Section -->
+            <section class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-xl">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-cardborder">
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-droplet text-cyan-400"></i> Daily Hydration (Water)
+                    </h2>
+                    <span id="waterCountText" class="text-xs font-mono text-cyan-300 font-bold">0 / 4 Liters</span>
+                </div>
+                <p class="text-xs text-gray-400 mb-4">Tap glasses to log 500ml increments (8 glasses total).</p>
+                <div class="grid grid-cols-4 gap-2 mb-4" id="waterGlassesContainer"></div>
+                <div class="w-full bg-darkbg h-2 rounded-full overflow-hidden border border-cardborder">
+                    <div id="waterProgressBar" class="bg-cyan-400 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </section>
+
+            <!-- Skincare Checklist -->
+            <section class="bg-cardbg border border-cardborder rounded-2xl p-5 shadow-xl">
+                <div class="flex items-center justify-between mb-4 pb-3 border-b border-cardborder">
+                    <h2 class="text-base font-bold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-spa text-pink-400"></i> Skincare Routine (Shankar)
+                    </h2>
+                    <span id="skincareCountText" class="text-xs font-mono text-pink-300">0/4 Done</span>
+                </div>
+                <p class="text-xs text-gray-400 mb-4">Maintain glowing, clear skin while bulking and working out.</p>
+                <div class="space-y-2.5" id="skincareListContainer"></div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- WORKOUT TIMER MODAL -->
+    <div id="timerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-cardbg border border-cardborder rounded-3xl p-6 max-w-xs w-full text-center shadow-2xl space-y-4">
+            <h3 class="text-lg font-bold text-white flex items-center justify-center gap-2">
+                <i class="fa-solid fa-stopwatch text-cyan-400"></i> Rest Timer
+            </h3>
+            <div id="timerDisplay" class="text-5xl font-mono font-extrabold text-cyan-400 py-4">01:30</div>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="setTimerSeconds(45)" class="py-2 bg-darkbg border border-cardborder rounded-xl text-xs font-mono hover:border-cyan-500">45s</button>
+                <button onclick="setTimerSeconds(90)" class="py-2 bg-darkbg border border-cardborder rounded-xl text-xs font-mono hover:border-cyan-500">90s</button>
+                <button onclick="setTimerSeconds(120)" class="py-2 bg-darkbg border border-cardborder rounded-xl text-xs font-mono hover:border-cyan-500">120s</button>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="toggleTimer()" id="timerToggleBtn" class="flex-1 py-3 bg-cyan-500 hover:bg-cyan-400 text-darkbg font-bold rounded-xl text-xs transition">Start</button>
+                <button onclick="closeTimerModal()" class="px-4 py-3 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- DATA CONFIGURATIONS ---
+        const workoutSplits = {
+            Mon: {
+                title: "Monday: Chest & Triceps",
+                exercises: [
+                    { id: 'm1', name: 'Flat Barbell or Dumbbell Bench Press', sets: '3 sets × 6–8 reps' },
+                    { id: 'm2', name: 'Incline Dumbbell Press', sets: '3 sets × 8–10 reps' },
+                    { id: 'm3', name: 'Chest Dips or Machine Flyes', sets: '3 sets × 10–12 reps' },
+                    { id: 'm4', name: 'Overhead Tricep Extension', sets: '3 sets × 10–12 reps' },
+                    { id: 'm5', name: 'Tricep Cable Pushdowns', sets: '3 sets × 12–15 reps' },
+                    { id: 'm6', name: 'Push-up Finisher', sets: '2 sets to near-failure' }
+                ]
+            },
+            Tue: {
+                title: "Tuesday: Back, Biceps & Core",
+                exercises: [
+                    { id: 'tu1', name: 'Lat Pulldowns or Pull-Ups', sets: '3 sets × 8–10 reps' },
+                    { id: 'tu2', name: 'Barbell Row or Chest-Supported Row', sets: '3 sets × 8–10 reps' },
+                    { id: 'tu3', name: 'Single-Arm Cable Row', sets: '3 sets × 10–12 reps' },
+                    { id: 'tu4', name: 'Standing Barbell Bicep Curl', sets: '3 sets × 10–12 reps' },
+                    { id: 'tu5', name: 'Incline Dumbbell Hammer Curl', sets: '3 sets × 12–15 reps' },
+                    { id: 'tu6', name: 'Hanging Leg Raises (Core)', sets: '3 sets × 12–15 reps' }
+                ]
+            },
+            Wed: {
+                title: "Wednesday: Shoulders & Core",
+                exercises: [
+                    { id: 'w1', name: 'Seated Dumbbell Overhead Press', sets: '3 sets × 6–8 reps' },
+                    { id: 'w2', name: 'Cable Lateral Raises', sets: '4 sets × 12–15 reps' },
+                    { id: 'w3', name: 'Reverse Pec Deck / Rear Delt Flyes', sets: '3 sets × 12–15 reps' },
+                    { id: 'w4', name: 'Dumbbell Shrugs (Traps)', sets: '3 sets × 10–12 reps' },
+                    { id: 'w5', name: 'Cable Woodchops (Core)', sets: '3 sets × 12–15 reps/side' },
+                    { id: 'w6', name: 'Plank Hold (Core)', sets: '3 sets to failure' }
+                ]
+            },
+            Thu: {
+                title: "Thursday: Chest, Triceps & Forearms",
+                exercises: [
+                    { id: 'th1', name: 'Incline Barbell Bench Press', sets: '3 sets × 6–8 reps' },
+                    { id: 'th2', name: 'Flat Dumbbell Fly-Press', sets: '3 sets × 10–12 reps' },
+                    { id: 'th3', name: 'Low-to-High Cable Crossovers', sets: '3 sets × 12–15 reps' },
+                    { id: 'th4', name: 'Close-Grip Bench or Skull Crushers', sets: '3 sets × 8–10 reps' },
+                    { id: 'th5', name: 'Reverse Barbell Curls (Forearms)', sets: '3 sets × 12–15 reps' },
+                    { id: 'th6', name: "Wrist Curls / Farmer's Carries", sets: '3 sets' }
+                ]
+            },
+            Fri: {
+                title: "Friday: Back, Biceps & Core",
+                exercises: [
+                    { id: 'f1', name: 'Barbell Deadlift or Heavy Rack Pulls', sets: '3 sets × 5 reps' },
+                    { id: 'f2', name: 'Underhand Grip Lat Pulldown', sets: '3 sets × 8–10 reps' },
+                    { id: 'f3', name: 'Seated Cable Close-Grip Row', sets: '3 sets × 10–12 reps' },
+                    { id: 'f4', name: 'Preacher Curls / Concentration Curls', sets: '3 sets × 10–12 reps' },
+                    { id: 'f5', name: 'Reverse Cable Curls', sets: '3 sets × 12–15 reps' },
+                    { id: 'f6', name: 'Weighted Crunches or Sit-Ups', sets: '3 sets × 12–15 reps' }
+                ]
+            },
+            Sat: {
+                title: "Saturday: Legs & Shoulders",
+                exercises: [
+                    { id: 's1', name: 'Barbell Back Squat or Leg Press', sets: '3 sets × 6–8 reps' },
+                    { id: 's2', name: 'Romanian Deadlifts (RDLs)', sets: '3 sets × 8–10 reps' },
+                    { id: 's3', name: 'Bulgarian Split Squats', sets: '3 sets × 10 reps/leg' },
+                    { id: 's4', name: 'Seated Hamstring Leg Curls', sets: '3 sets × 12–15 reps' },
+                    { id: 's5', name: 'Standing Calf Raises', sets: '3 sets × 15 reps' },
+                    { id: 's6', name: 'Dumbbell Lateral Raises', sets: '3 sets × 12–15 reps' }
+                ]
+            }
+        };
+
+        const stapleFoods = [
+            { id: 'food_oats', name: 'Oatmeal Bowl (1 cup + Milk/PB)', cals: 450, protein: 18, carbs: 65, fats: 14, icon: 'fa-bowl-rice' },
+            { id: 'food_eggs', name: 'Daily Eggs (3-5 Whole Boiled/Omelette)', cals: 350, protein: 30, carbs: 2, fats: 24, icon: 'fa-egg' },
+            { id: 'food_dal', name: 'Thick Dal Bowl (Toor/Chana with Ghee)', cals: 300, protein: 18, carbs: 40, fats: 8, icon: 'fa-bowl-food' },
+            { id: 'food_aloo', name: 'Aloo (Potato Curry / Mashed)', cals: 280, protein: 5, carbs: 60, fats: 4, icon: 'fa-carrot' },
+            { id: 'food_soy', name: 'Soybean Chunks Curry (High Protein)', cals: 320, protein: 35, carbs: 25, fats: 6, icon: 'fa-seedling' },
+            { id: 'food_chicken', name: 'Chicken Breast / Curry (2-3x weekly)', cals: 380, protein: 45, carbs: 5, fats: 12, icon: 'fa-drumstick-bite' }
+        ];
+
+        const skincareItems = [
+            { id: 'skin_cleanser', name: "Pond's Face Wash (AM & PM Cleansing)" },
+            { id: 'skin_ubtan', name: 'Ubtan Mask (2-3x weekly glow)' },
+            { id: 'skin_vitc', name: 'Vitamin C Serum (Brightening)' },
+            { id: 'skin_spf', name: 'Sunscreen SPF 50 (Outdoor protection)' }
+        ];
+
+        let currentActiveDay = 'Mon';
+        let timerSecondsLeft = 90;
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            const options = { weekday: 'long', month: 'short', day: 'numeric' };
+            document.getElementById('dateDisplay').innerText = new Date().toLocaleDateString('en-US', options);
+
+            loadState();
+            switchWorkoutDay('Mon');
+            renderStaples();
+            renderSkincare();
+            renderWaterGlasses();
+            updateWeightProgressUI();
+            updateNutritionTotals();
+        };
+
+        // --- STATE PERSISTENCE ---
+        function getState() {
+            const data = localStorage.getItem('shankarFitState');
+            if (data) return JSON.parse(data);
+            return { weight: 52.0, workouts: {}, staples: {}, skincare: {}, water: 0 };
+        }
+
+        function saveState(state) {
+            localStorage.setItem('shankarFitState', JSON.stringify(state));
+        }
+
+        // --- TAB NAVIGATION ---
+        function switchTab(tabName) {
+            ['workout', 'diet', 'progress', 'wellness'].forEach(t => {
+                document.getElementById(`tab-content-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-btn-${t}`);
+                if (btn) btn.className = "flex flex-col items-center text-gray-400 hover:text-gray-200 transition";
+            });
+            document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-btn-${tabName}`);
+            if (activeBtn) activeBtn.className = "flex flex-col items-center text-cyan-400 transition";
+        }
+
+        // --- WORKOUT LOGIC ---
+        function switchWorkoutDay(day) {
+            currentActiveDay = day;
+            ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(d => {
+                const btn = document.getElementById(`split-tab-${d}`);
+                if (d === day) {
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cyan-500 text-darkbg shadow-lg shadow-cyan-500/20";
+                } else {
+                    btn.className = "px-4 py-2 rounded-xl text-xs font-mono font-bold whitespace-nowrap transition bg-cardbg border border-cardborder text-gray-400 hover:text-white";
+                }
+            });
+            renderWorkoutDay(day);
+        }
+
+        function renderWorkoutDay(day) {
+            const split = workoutSplits[day];
+            document.getElementById('activeWorkoutTitle').innerText = split.title;
+            
+            const state = getState();
+            if (!state.workouts[day]) state.workouts[day] = {};
+
+            const container = document.getElementById('exerciseListContainer');
+            container.innerHTML = '';
+            let completedCount = 0;
+
+            split.exercises.forEach((ex, index) => {
+                const isChecked = state.workouts[day][ex.id] || false;
+                if (isChecked) completedCount++;
+
+                const div = document.createElement('div');
+                div.className = `flex items-center justify-between p-3.5 rounded-xl border transition ${isChecked ? 'bg-cyan-950/20 border-cyan-800/40 opacity-75' : 'bg-darkbg border-cardborder hover:border-gray-700'}`;
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" id="ex_${ex.id}" ${isChecked ? 'checked' : ''} onclick="toggleExercise('${day}', '${ex.id}')" class="w-5 h-5 accent-cyan-500 rounded cursor-pointer">
+                        <div>
+                            <label for="ex_${ex.id}" class="text-xs sm:text-sm font-medium text-gray-200 cursor-pointer ${isChecked ? 'line-through text-gray-400' : ''}">
+                                <span class="text-cyan-400 font-mono text-xs mr-2">#${index+1}</span>${ex.name}
+                            </label>
+                            <p class="text-[11px] text-gray-400 font-mono mt-0.5">${ex.sets}</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-mono px-2 py-1 rounded bg-cardborder text-cyan-300">6 Var</span>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('workoutProgressBadge').innerText = `${completedCount}/6 Done`;
+        }
+
+        function toggleExercise(day, exerciseId) {
+            const state = getState();
+            if (!state.workouts[day]) state.workouts[day] = {};
+            state.workouts[day][exerciseId] = !state.workouts[day][exerciseId];
+            saveState(state);
+            renderWorkoutDay(day);
+        }
+
+        // --- NUTRITION LOGIC ---
+        function renderStaples() {
+            const state = getState();
+            const container = document.getElementById('stapleFoodGrid');
+            container.innerHTML = '';
+
+            stapleFoods.forEach(food => {
+                const isChecked = state.staples[food.id] || false;
+                const card = document.createElement('div');
+                card.className = `p-3.5 rounded-xl border transition flex flex-col justify-between cursor-pointer ${isChecked ? 'bg-emerald-950/30 border-emerald-800/50' : 'bg-darkbg border-cardborder hover:border-gray-700'}`;
+                card.onclick = (e) => {
+                    if (e.target.tagName !== 'INPUT') toggleStaple(food.id);
+                };
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center text-emerald-400 text-sm">
+                                <i class="fa-solid ${food.icon}"></i>
+                            </div>
+                            <span class="text-xs font-bold text-gray-200">${food.name}</span>
+                        </div>
+                        <input type="checkbox" id="food_${food.id}" ${isChecked ? 'checked' : ''} onchange="toggleStaple('${food.id}')" class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] font-mono text-gray-400 pt-2 border-t border-cardborder">
+                        <span class="text-emerald-400 font-semibold">+${food.cals} kcal</span>
+                        <span>P: ${food.protein}g | C: ${food.carbs}g | F: ${food.fats}g</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleStaple(foodId) {
+            const state = getState();
+            if (!state.staples) state.staples = {};
+            state.staples[foodId] = !state.staples[foodId];
+            saveState(state);
+            renderStaples();
+            updateNutritionTotals();
+        }
+
+        function updateNutritionTotals() {
+            const state = getState();
+            let totalCals = 0, totalProtein = 0, totalCarbs = 0, totalFats = 0;
+            stapleFoods.forEach(food => {
+                if (state.staples && state.staples[food.id]) {
+                    totalCals += food.cals;
+                    totalProtein += food.protein;
+                    totalCarbs += food.carbs;
+                    totalFats += food.fats;
+                }
+            });
+            document.getElementById('totalCalories').innerText = totalCals;
+            document.getElementById('totalProtein').innerText = totalProtein + 'g';
+            document.getElementById('totalCarbs').innerText = totalCarbs + 'g';
+            document.getElementById('totalFats').innerText = totalFats + 'g';
+        }
+
+        // --- WEIGHT & GOAL PROGRESS ---
+        function updateWeight() {
+            const val = parseFloat(document.getElementById('weightInput').value);
+            if (isNaN(val) || val < 30 || val > 150) return;
+            const state = getState();
+            state.weight = val;
+            saveState(state);
+            updateWeightProgressUI();
+        }
+
+        function updateWeightProgressUI() {
+            const state = getState();
+            const current = state.weight || 52.0;
+            document.getElementById('weightInput').value = current;
+            document.getElementById('headerWeight').innerText = current;
+
+            let progress = ((current - 52.0) / (60.0 - 52.0)) * 100;
+            if (progress < 0) progress = 0;
+            if (progress > 100) progress = 100;
+
+            document.getElementById('weightProgressBar').style.width = progress.toFixed(1) + '%';
+            document.getElementById('progressPercentageText').innerText = `${progress.toFixed(0)}% Completed (${current}kg / 60kg)`;
+
+            // Milestones updates
+            document.getElementById('badge-54').innerText = current >= 54 ? 'Achieved!' : 'Pending';
+            document.getElementById('badge-54').className = current >= 54 ? 'text-[10px] text-emerald-400 font-bold mt-1' : 'text-[10px] text-gray-500 mt-1';
+
+            document.getElementById('badge-56').innerText = current >= 56 ? 'Achieved!' : 'Pending';
+            document.getElementById('badge-56').className = current >= 56 ? 'text-[10px] text-emerald-400 font-bold mt-1' : 'text-[10px] text-gray-500 mt-1';
+
+            document.getElementById('badge-58').innerText = current >= 58 ? 'Achieved!' : 'Pending';
+            document.getElementById('badge-58').className = current >= 58 ? 'text-[10px] text-emerald-400 font-bold mt-1' : 'text-[10px] text-gray-500 mt-1';
+
+            document.getElementById('badge-60').innerText = current >= 60 ? 'Achieved!' : 'Pending';
+            document.getElementById('badge-60').className = current >= 60 ? 'text-[10px] text-emerald-400 font-bold mt-1' : 'text-[10px] text-gray-500 mt-1';
+        }
+
+        // --- HYDRATION LOGIC ---
+        function renderWaterGlasses() {
+            const state = getState();
+            const waterCount = state.water || 0;
+            const container = document.getElementById('waterGlassesContainer');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= 8; i++) {
+                const isFilled = i <= waterCount;
+                const btn = document.createElement('button');
+                btn.onclick = () => {
+                    state.water = (state.water === i) ? i - 1 : i;
+                    saveState(state);
+                    renderWaterGlasses();
+                };
+                btn.className = `h-10 rounded-xl border flex items-center justify-center transition ${isFilled ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 neon-glow-cyan' : 'bg-darkbg border-cardborder text-gray-600'}`;
+                btn.innerHTML = `<i class="fa-solid fa-droplet text-xs ${isFilled ? 'text-cyan-400' : 'text-gray-600'}"></i> <span class="text-[10px] font-mono ml-1">${i*0.5}L</span>`;
+                container.appendChild(btn);
+            }
+            document.getElementById('waterCountText').innerText = `${waterCount * 0.5} / 4.0 Liters`;
+            document.getElementById('waterProgressBar').style.width = `${(waterCount / 8) * 100}%`;
+        }
+
+        // --- SKINCARE LOGIC ---
+        function renderSkincare() {
+            const state = getState();
+            const container = document.getElementById('skincareListContainer');
+            container.innerHTML = '';
+            let completed = 0;
+
+            skincareItems.forEach(item => {
+                const isChecked = state.skincare && state.skincare[item.id] || false;
+                if (isChecked) completed++;
+
+                const div = document.createElement('div');
+                div.className = `flex items-center justify-between p-3 rounded-xl border transition ${isChecked ? 'bg-pink-950/20 border-pink-800/40' : 'bg-darkbg border-cardborder'}`;
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" id="${item.id}" ${isChecked ? 'checked' : ''} onchange="toggleSkincare('${item.id}')" class="w-4 h-4 accent-pink-500 rounded cursor-pointer">
+                        <label for="${item.id}" class="text-xs font-medium text-gray-200 cursor-pointer ${isChecked ? 'line-through text-gray-400' : ''}">${item.name}</label>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById('skincareCountText').innerText = `${completed}/4 Done`;
+        }
+
+        function toggleSkincare(id) {
+            const state = getState();
+            if (!state.skincare) state.skincare = {};
+            state.skincare[id] = !state.skincare[id];
+            saveState(state);
+            renderSkincare();
+        }
+
+        // --- WORKOUT TIMER FUNCTIONS ---
+        function openTimerModal() {
+            document.getElementById('timerModal').classList.remove('hidden');
+        }
+        function closeTimerModal() {
+            document.getElementById('timerModal').classList.add('hidden');
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            document.getElementById('timerToggleBtn').innerText = 'Start';
+        }
+        function setTimerSeconds(sec) {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timerSecondsLeft = sec;
+            updateTimerDisplay();
+            document.getElementById('timerToggleBtn').innerText = 'Start';
+        }
+        function toggleTimer() {
+            if (isTimerRunning) {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                document.getElementById('timerToggleBtn').innerText = 'Resume';
+            } else {
+                isTimerRunning = true;
+                document.getElementById('timerToggleBtn').innerText = 'Pause';
+                timerInterval = setInterval(() => {
+                    if (timerSecondsLeft > 0) {
+                        timerSecondsLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isTimerRunning = false;
+                        document.getElementById('timerToggleBtn').innerText = 'Start';
+                        alert('Rest time is over! Ready for the next set.');
+                    }
+                }, 1000);
+            }
+        }
+        function updateTimerDisplay() {
+            const m = Math.floor(timerSecondsLeft / 60).toString().padStart(2, '0');
+            const s = (timerSecondsLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+            document.getElementById('timerButtonText').innerText = `${m}:${s}`;
+        }
+
+        function resetDailyData() {
+            if (confirm("Reset today's workout checkboxes, meals, and skincare? (Weight saved)")) {
+                const state = getState();
+                state.workouts = {};
+                state.staples = {};
+                state.skincare = {};
+                state.water = 0;
+                saveState(state);
+                renderWorkoutDay(currentActiveDay);
+                renderStaples();
+                renderSkincare();
+                renderWaterGlasses();
+                updateNutritionTotals();
+            }
+        }
+
+        function loadState() {
+            updateWeightProgressUI();
+        }
+    </script>
+</body>
+</html>
