@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="manifest" href="./manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shankar Fit - Bulking & Training Dashboard</title>
+    <link rel="manifest" href="./manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -59,6 +59,7 @@
         <div class="flex border-b border-slate-800 space-x-6 overflow-x-auto">
             <button onclick="switchTab('workout')" id="tab-btn-workout" class="pb-3 border-b-2 border-emerald-500 font-semibold text-emerald-400 whitespace-nowrap transition">Today's Workout</button>
             <button onclick="switchTab('diet')" id="tab-btn-diet" class="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-white whitespace-nowrap transition">Bulking Diet Plan</button>
+            <button onclick="switchTab('skincare')" id="tab-btn-skincare" class="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-white whitespace-nowrap transition">Skincare (AM/PM)</button>
             <button onclick="switchTab('progress')" id="tab-btn-progress" class="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-white whitespace-nowrap transition">Weight & Progress</button>
         </div>
 
@@ -100,7 +101,61 @@
             </div>
         </section>
 
-        <!-- TAB 3: PROGRESS -->
+        <!-- TAB 3: SKINCARE -->
+        <section id="tab-skincare" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900 border border-slate-800 rounded-xl p-5 gap-4">
+                <div>
+                    <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="skincare-day-label">Monday</span>
+                    <h2 class="text-2xl font-bold mt-2 text-white">Detan, Brighten & Barrier Care</h2>
+                    <p class="text-sm text-slate-400 mt-1" id="skincare-day-focus">Exfoliation Night 1: Gently dissolves tanned, dull surface cells.</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <span id="skincare-progress-counter" class="text-xs font-bold bg-emerald-950 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-800/50">0/0 Done</span>
+                    <select id="skincare-day-selector" onchange="changeSkincareDay(this.value)" class="bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- AM Card -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="text-lg font-bold text-amber-400">Morning Routine (AM)</h3>
+                        <span class="text-xs text-slate-400">Brighten & Protect</span>
+                    </div>
+                    <div id="skincare-am-container" class="space-y-3">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- PM Card -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="text-lg font-bold text-indigo-400">Night / Post-Gym Routine (PM)</h3>
+                        <span class="text-xs text-slate-400">Detan & Repair</span>
+                    </div>
+                    <div id="skincare-pm-container" class="space-y-3">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evening Gym & Dryness Rules -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+                <h3 class="text-base font-bold text-white">Evening Gym & Dryness Rules</h3>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Evening Workout Shift:</span> Wash with gentle cleanser right after the gym and apply that day's PM routine immediately—skip washing a second time at bedtime to prevent extra dryness.</p>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Dryness Guardrail:</span> Apply moisturizer within 60 seconds while skin is slightly damp, wrap ice in a soft cloth (1 min max), and rinse masks before they dry out completely.</p>
+            </div>
+        </section>
+
+        <!-- TAB 4: PROGRESS -->
         <section id="tab-progress" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -223,6 +278,107 @@
             { name: "Mass-Gaining Dinner (8:30 PM)", desc: "Mashed aloo & rice mixed with Dal, or soybean curry with chapatis + warm milk before bed." }
         ];
 
+        const skincareSchedule = {
+            "Monday": {
+                focus: "Exfoliation Night 1: Gently dissolves tanned, dull surface cells.",
+                am: [
+                    "Gentle Cleanser (lukewarm water)",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer (within 60s)",
+                    "Pond's Sunscreen (SPF 50)"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Glycolic Acid 5% Toner (on completely dry skin)",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Tuesday": {
+                focus: "Barrier Recovery: Deeply hydrates and calms skin after Monday's exfoliation.",
+                am: [
+                    "Gentle Cleanser (Skip icing today)",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer",
+                    "Pond's Sunscreen (SPF 50)"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Plum Goji Berry",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Wednesday": {
+                focus: "Cooling Hydration & Detan: Soothes sun-heated skin, replenishes water loss, and gently fades tan.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Cucumber Paste + Curd/Aloe Mask (10–12 mins)",
+                    "Rinse with cool water",
+                    "Plum Goji Berry + Thick Barrier Moisturizer"
+                ]
+            },
+            "Thursday": {
+                focus: "Exfoliation Night 2: Second weekly chemical exfoliation to lift stubborn tan.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Glycolic Acid 5% Toner (on completely dry skin)",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Friday": {
+                focus: "Barrier Recovery: Restores moisture and prevents post-wash tightness or flaking.",
+                am: [
+                    "Gentle Cleanser (Skip icing today)",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer",
+                    "Pond's Sunscreen (SPF 50)"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Plum Goji Berry",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Saturday": {
+                focus: "Antioxidant Repair: Brightens uneven tone and strengthens your skin barrier.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Plum Goji Berry",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Sunday": {
+                focus: "Weekly Detan Boost: Lactic acid in curd + turmeric brightens dullness while honey locks in moisture.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Turmeric + Curd + Honey Pack (10–12 mins)",
+                    "Rinse with cool water",
+                    "Thick Barrier Moisturizer"
+                ]
+            }
+        };
+
         let weightHistory = JSON.parse(localStorage.getItem('shankar_weights')) || [
             { date: 'Oct 01', weight: 51.2 },
             { date: 'Nov 01', weight: 52.0 },
@@ -231,12 +387,15 @@
 
         let currentDay = 'Monday';
         let completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
+        let currentSkincareDay = 'Monday';
+        let completedSkincare = JSON.parse(localStorage.getItem('shankar_skincare_' + currentSkincareDay)) || {};
         let chartInstance = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             calculateDaysLeft();
             renderWorkout('Monday');
             renderDiet();
+            renderSkincare('Monday');
             initChart();
             updateDisplayWeight();
             renderWeightTable();
@@ -256,7 +415,7 @@
         }
 
         function switchTab(tab) {
-            ['workout', 'diet', 'progress'].forEach(t => {
+            ['workout', 'diet', 'skincare', 'progress'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 document.getElementById(`tab-btn-${t}`).classList.remove('border-emerald-500', 'text-emerald-400');
                 document.getElementById(`tab-btn-${t}`).classList.add('border-transparent', 'text-slate-400');
@@ -329,6 +488,57 @@
                     </div>
                 `;
             });
+        }
+
+        function changeSkincareDay(day) {
+            currentSkincareDay = day;
+            document.getElementById('skincare-day-label').innerText = day;
+            completedSkincare = JSON.parse(localStorage.getItem('shankar_skincare_' + currentSkincareDay)) || {};
+            renderSkincare(day);
+        }
+
+        function toggleSkincareStep(key) {
+            completedSkincare[key] = !completedSkincare[key];
+            localStorage.setItem('shankar_skincare_' + currentSkincareDay, JSON.stringify(completedSkincare));
+            renderSkincare(currentSkincareDay);
+        }
+
+        function renderSkincare(day) {
+            const data = skincareSchedule[day];
+            document.getElementById('skincare-day-focus').innerText = data.focus;
+            const amContainer = document.getElementById('skincare-am-container');
+            const pmContainer = document.getElementById('skincare-pm-container');
+            amContainer.innerHTML = '';
+            pmContainer.innerHTML = '';
+
+            let done = 0;
+            const total = data.am.length + data.pm.length;
+
+            data.am.forEach((step, idx) => {
+                const key = `am_${idx}`;
+                const checked = completedSkincare[key] || false;
+                if (checked) done++;
+                amContainer.innerHTML += `
+                    <label class="flex items-start justify-between gap-3 bg-slate-800/60 border ${checked ? 'border-emerald-600/50' : 'border-slate-800'} rounded-lg p-3 cursor-pointer transition">
+                        <span class="text-sm ${checked ? 'line-through text-slate-400' : 'text-slate-200'}"><strong class="text-amber-400">${idx + 1}.</strong> ${step}</span>
+                        <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSkincareStep('${key}')" class="w-4 h-4 accent-emerald-500 rounded mt-0.5 cursor-pointer">
+                    </label>
+                `;
+            });
+
+            data.pm.forEach((step, idx) => {
+                const key = `pm_${idx}`;
+                const checked = completedSkincare[key] || false;
+                if (checked) done++;
+                pmContainer.innerHTML += `
+                    <label class="flex items-start justify-between gap-3 bg-slate-800/60 border ${checked ? 'border-emerald-600/50' : 'border-slate-800'} rounded-lg p-3 cursor-pointer transition">
+                        <span class="text-sm ${checked ? 'line-through text-slate-400' : 'text-slate-200'}"><strong class="text-indigo-400">${idx + 1}.</strong> ${step}</span>
+                        <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSkincareStep('${key}')" class="w-4 h-4 accent-emerald-500 rounded mt-0.5 cursor-pointer">
+                    </label>
+                `;
+            });
+
+            document.getElementById('skincare-progress-counter').innerText = `${done}/${total} Done`;
         }
 
         function initChart() {
