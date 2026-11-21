@@ -173,4 +173,640 @@
             </div>
 
             <!-- Evening Gym & Dryness Rules -->
-            <div class="bg-slate-900 border border-slate
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+                <h3 class="text-base font-bold text-white">Evening Gym & Dryness Rules</h3>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Evening Workout Shift:</span> Wash with gentle cleanser right after the gym and apply that day's PM routine immediately—skip washing a second time at bedtime to prevent extra dryness.</p>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Dryness Guardrail:</span> Apply moisturizer within 60 seconds while skin is slightly damp, wrap ice in a soft cloth (1 min max), and rinse masks before they dry out completely.</p>
+            </div>
+        </section>
+
+        <!-- TAB 4: PROGRESS -->
+        <section id="tab-progress" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Weight Gain Trajectory (52kg → 60kg)</h2>
+                        <p class="text-sm text-slate-400">Latest logged weight: <span id="progress-latest-weight" class="font-bold text-emerald-400">52.0 kg</span></p>
+                    </div>
+                    <button onclick="openWeightModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Weekly Weigh-In</button>
+                </div>
+                
+                <div class="h-72 w-full">
+                    <canvas id="weightChart"></canvas>
+                </div>
+
+                <!-- Weight Log Table -->
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <h3 class="text-lg font-bold text-white mb-3">Weigh-In History</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-800 text-slate-400 uppercase text-xs">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-l-lg">Date / Week</th>
+                                    <th class="px-4 py-3">Weight (kg)</th>
+                                    <th class="px-4 py-3 rounded-r-lg text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weight-table-body">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Weight Update Modal -->
+    <div id="weight-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <h3 class="text-lg font-bold text-white">Log Weekly Weight</h3>
+            <p class="text-sm text-slate-400">Record your weight and date to update your progress chart.</p>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Date / Label</label>
+                <input type="text" id="modal-date-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. Nov 24">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Weight (kg)</label>
+                <input type="number" step="0.1" id="modal-weight-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. 52.5">
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="closeWeightModal()" class="px-4 py-2 text-slate-400 hover:text-white text-sm font-medium">Cancel</button>
+                <button onclick="saveNewWeight()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">Save Entry</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        const workouts = {
+            "Monday": { title: "Chest & Triceps", desc: "Heavy horizontal press, upper shelf development, and tricep isolation.", exercises: [
+                { name: "Flat Barbell Bench Press", sets: "3 sets × 6-8 reps", type: "Compound" },
+                { name: "Incline Dumbbell Press", sets: "3 sets × 8-10 reps", type: "Compound" },
+                { name: "Chest Dips or Machine Flyes", sets: "3 sets × 10-12 reps", type: "Accessory" },
+                { name: "Overhead Tricep Extension", sets: "3 sets × 10-12 reps", type: "Isolation" },
+                { name: "Tricep Cable Pushdowns", sets: "3 sets × 12-15 reps", type: "Isolation" },
+                { name: "Push-up Finisher", sets: "2 sets to near-failure", type: "Finisher" }
+            ]},
+            "Tuesday": { title: "Back, Biceps & Core", desc: "Width-building vertical pulls and core stability.", exercises: [
+                { name: "Lat Pulldowns or Pull-Ups", sets: "3 sets × 8-10 reps", type: "Compound" },
+                { name: "Chest-Supported Row", sets: "3 sets × 8-10 reps", type: "Compound" },
+                { name: "Single-Arm Cable Row", sets: "3 sets × 10-12 reps", type: "Accessory" },
+                { name: "Standing Barbell Curl", sets: "3 sets × 10-12 reps", type: "Isolation" },
+                { name: "Incline Hammer Curl", sets: "3 sets × 12-15 reps", type: "Isolation" },
+                { name: "Hanging Leg Raises", sets: "3 sets × 12-15 reps", type: "Core" }
+            ]},
+            "Wednesday": { title: "Shoulders & Core", desc: "Overhead pressing power and direct side/rear delt width.", exercises: [
+                { name: "Seated DB Overhead Press", sets: "3 sets × 6-8 reps", type: "Compound" },
+                { name: "Cable Lateral Raises", sets: "4 sets × 12-15 reps", type: "Isolation" },
+                { name: "Reverse Pec Deck Flyes", sets: "3 sets × 12-15 reps", type: "Isolation" },
+                { name: "Dumbbell Shrugs", sets: "3 sets × 10-12 reps", type: "Accessory" },
+                { name: "Cable Woodchops", sets: "3 sets × 12-15 reps", type: "Core" },
+                { name: "Plank Hold", sets: "3 sets to failure", type: "Core" }
+            ]},
+            "Thursday": { title: "Chest, Triceps & Forearms", desc: "Upper shelf focus and grip strength.", exercises: [
+                { name: "Incline Barbell Bench Press", sets: "3 sets × 6-8 reps", type: "Compound" },
+                { name: "Flat DB Fly-Press", sets: "3 sets × 10-12 reps", type: "Accessory" },
+                { name: "Low-to-High Cable Crossovers", sets: "3 sets × 12-15 reps", type: "Accessory" },
+                { name: "Close-Grip Bench Press", sets: "3 sets × 8-10 reps", type: "Compound" },
+                { name: "Reverse Barbell Curls", sets: "3 sets × 12-15 reps", type: "Forearms" },
+                { name: "Wrist Curls / Farmer's Carry", sets: "3 sets", type: "Forearms" }
+            ]},
+            "Friday": { title: "Back, Biceps & Core", desc: "Thickness-building horizontal movements.", exercises: [
+                { name: "Barbell Deadlift / Rack Pulls", sets: "3 sets × 5 reps", type: "Compound" },
+                { name: "Underhand Grip Lat Pulldown", sets: "3 sets × 8-10 reps", type: "Compound" },
+                { name: "Seated Cable Row", sets: "3 sets × 10-12 reps", type: "Accessory" },
+                { name: "Preacher / Concentration Curls", sets: "3 sets × 10-12 reps", type: "Isolation" },
+                { name: "Reverse Cable Curls", sets: "3 sets × 12-15 reps", type: "Isolation" },
+                { name: "Decline Weighted Crunches", sets: "3 sets × 12-15 reps", type: "Core" }
+            ]},
+            "Saturday": { title: "Legs & Shoulders", desc: "Complete lower body mass paired with shoulder pump.", exercises: [
+                { name: "Barbell Back Squat / Leg Press", sets: "3 sets × 6-8 reps", type: "Compound" },
+                { name: "Romanian Deadlifts (RDLs)", sets: "3 sets × 8-10 reps", type: "Compound" },
+                { name: "Bulgarian Split Squats", sets: "3 sets × 10 reps/leg", type: "Accessory" },
+                { name: "Seated Leg Curls", sets: "3 sets × 12-15 reps", type: "Isolation" },
+                { name: "Standing Calf Raises", sets: "3 sets × 15 reps", type: "Isolation" },
+                { name: "Dumbbell Lateral Raises", sets: "3 sets × 12-15 reps", type: "Isolation" }
+            ]},
+            "Sunday": { title: "Rest & Active Recovery", desc: "Muscle repair, gentle mobility, and heavy calorie intake.", exercises: [
+                { name: "Light Walking / Stretching", sets: "20 minutes", type: "Recovery" },
+                { name: "Hydration Focus", sets: "3.5 - 4 Liters", type: "Habit" },
+                { name: "Meal Prep & Surplus Check", sets: "Review Weekly Macros", type: "Nutrition" }
+            ]}
+        };
+
+        const baseMeals = [
+            { name: "Pre-Workout Fuel (5:15 AM)", desc: "1 Banana + handful of soaked almonds/raisins before training.", tag: "Pre-Gym" },
+            { name: "Post-Workout Shake & Oatmeal", desc: "Nakpro Gold Mass Gainer shake + rolled oats with milk, chia seeds & daily eggs.", tag: "Post-Gym" },
+            { name: "Aloo & Soybean Curry", desc: "Boiled potato (aloo) & soybean chunks with rice or chapatis.", tag: "Carbs + Protein" },
+            { name: "Dal & Salad Lunch", desc: "Thick dal + rice/chapatis + fresh cucumber (kheera) & carrots.", tag: "Lunch" },
+            { name: "Curd & Snack Bowl", desc: "Curd bowl with eggs or nuts for steady afternoon calories.", tag: "Snack" }
+        ];
+
+        const dietPlans = {
+            "Monday": {
+                focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.",
+                meals: [
+                    ...baseMeals,
+                    { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }
+                ]
+            },
+            "Tuesday": {
+                focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.",
+                meals: [
+                    ...baseMeals.slice(0, 3),
+                    { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" },
+                    baseMeals[4],
+                    { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }
+                ]
+            },
+            "Wednesday": {
+                focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.",
+                meals: [
+                    ...baseMeals,
+                    { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }
+                ]
+            },
+            "Thursday": {
+                focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.",
+                meals: [
+                    ...baseMeals.slice(0, 3),
+                    { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" },
+                    baseMeals[4],
+                    { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }
+                ]
+            },
+            "Friday": {
+                focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.",
+                meals: [
+                    ...baseMeals,
+                    { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }
+                ]
+            },
+            "Saturday": {
+                focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.",
+                meals: [
+                    ...baseMeals.slice(0, 3),
+                    { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" },
+                    baseMeals[4],
+                    { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }
+                ]
+            },
+            "Sunday": {
+                focus: "Rest & recovery calorie surplus with full staples, eggs, curd, salad & Nakpro Gold Mass Gainer.",
+                meals: [
+                    ...baseMeals,
+                    { name: "Evening Dinner (8:30 PM)", desc: "Full bulking dinner with dal, aloo/soybean, rice/chapatis & salad.", tag: "Dinner" }
+                ]
+            }
+        };
+
+        const skincareSchedule = {
+            "Monday": {
+                focus: "Exfoliation Night 1: Gently dissolves tanned, dull surface cells.",
+                am: [
+                    "Gentle Cleanser (lukewarm water)",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer (within 60s)",
+                    "Pond's Sunscreen (SPF 50)"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Glycolic Acid 5% Toner (on completely dry skin)",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Tuesday": {
+                focus: "Barrier Recovery: Deeply hydrates and calms skin after Monday's exfoliation.",
+                am: [
+                    "Gentle Cleanser (Skip icing today)",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer",
+                    "Pond's Sunscreen (SPF 50)"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Plum Goji Berry",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Wednesday": {
+                focus: "Cooling Hydration & Detan: Soothes sun-heated skin, replenishes water loss, and gently fades tan.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Cucumber Paste + Curd/Aloe Mask (10–12 mins)",
+                    "Rinse with cool water",
+                    "Plum Goji Berry + Thick Barrier Moisturizer"
+                ]
+            },
+            "Thursday": {
+                focus: "Exfoliation Night 2: Second weekly chemical exfoliation to lift stubborn tan.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Glycolic Acid 5% Toner (on completely dry skin)",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Friday": {
+                focus: "Barrier Recovery: Restores moisture and prevents post-wash tightness or flaking.",
+                am: [
+                    "Gentle Cleanser (Skip icing today)",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer",
+                    "Pond's Sunscreen (SPF 50)"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Plum Goji Berry",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Saturday": {
+                focus: "Antioxidant Repair: Brightens uneven tone and strengthens your skin barrier.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Gentle Cleanser",
+                    "Plum Goji Berry",
+                    "Thick Barrier Moisturizer"
+                ]
+            },
+            "Sunday": {
+                focus: "Weekly Detan Boost: Lactic acid in curd + turmeric brightens dullness while honey locks in moisture.",
+                am: [
+                    "Cloth-Wrapped Ice (1 min max)",
+                    "Gentle Cleanser",
+                    "Minimalist 10% Vitamin C Serum",
+                    "Barrier Moisturizer + Pond's Sunscreen"
+                ],
+                pm: [
+                    "Turmeric + Curd + Honey Pack (10–12 mins)",
+                    "Rinse with cool water",
+                    "Thick Barrier Moisturizer"
+                ]
+            }
+        };
+
+        let weightHistory = JSON.parse(localStorage.getItem('shankar_weights')) || [
+            { date: 'Oct 01', weight: 51.2 },
+            { date: 'Nov 01', weight: 52.0 },
+            { date: 'Nov 17', weight: 52.0 }
+        ];
+
+        function getActualDayName(dateObj = new Date()) {
+            const jsDay = dateObj.getDay();
+            return jsDay === 0 ? "Sunday" : dayOrder[jsDay - 1];
+        }
+
+        function formatShortDate(dateObj) {
+            return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function getDateForDayInCurrentWeek(dayName) {
+            const now = new Date();
+            const currentIndex = dayOrder.indexOf(getActualDayName(now));
+            const targetIndex = dayOrder.indexOf(dayName);
+            const diff = targetIndex - currentIndex;
+            const targetDate = new Date(now);
+            targetDate.setDate(now.getDate() + diff);
+            return targetDate;
+        }
+
+        let currentDay = getActualDayName(new Date());
+        let completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
+        let currentDietDay = currentDay;
+        let completedMeals = JSON.parse(localStorage.getItem('shankar_diet_' + currentDietDay)) || {};
+        let currentSkincareDay = currentDay;
+        let completedSkincare = JSON.parse(localStorage.getItem('shankar_skincare_' + currentSkincareDay)) || {};
+        let chartInstance = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateDaysLeft();
+
+            document.getElementById('day-selector').value = currentDay;
+            document.getElementById('today-day-label').innerText = currentDay;
+
+            document.getElementById('diet-day-selector').value = currentDietDay;
+            document.getElementById('diet-day-label').innerText = currentDietDay;
+
+            document.getElementById('skincare-day-selector').value = currentSkincareDay;
+            document.getElementById('skincare-day-label').innerText = currentSkincareDay;
+
+            renderWorkout(currentDay);
+            renderDiet(currentDietDay);
+            renderSkincare(currentSkincareDay);
+            initChart();
+            updateDisplayWeight();
+            renderWeightTable();
+            document.getElementById('modal-date-input').value = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed', err));
+            }
+        });
+
+        function calculateDaysLeft() {
+            const target = new Date('2027-01-15');
+            const today = new Date();
+            const diffTime = target - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById('days-left-badge').innerText = `${diffDays} Days Left`;
+        }
+
+        function switchTab(tab) {
+            ['workout', 'diet', 'skincare', 'progress'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`tab-btn-${t}`).classList.remove('border-emerald-500', 'text-emerald-400');
+                document.getElementById(`tab-btn-${t}`).classList.add('border-transparent', 'text-slate-400');
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-btn-${tab}`).classList.add('border-emerald-500', 'text-emerald-400');
+            document.getElementById(`tab-btn-${tab}`).classList.remove('border-transparent', 'text-slate-400');
+            if(tab === 'progress') {
+                refreshChart();
+            }
+        }
+
+        function changeWorkoutDay(day) {
+            currentDay = day;
+            document.getElementById('today-day-label').innerText = day;
+            completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
+            renderWorkout(day);
+        }
+
+        function toggleExercise(idx) {
+            completedExercises[idx] = !completedExercises[idx];
+            localStorage.setItem('shankar_completed_' + currentDay, JSON.stringify(completedExercises));
+            renderWorkout(currentDay);
+        }
+
+        function renderWorkout(day) {
+            const data = workouts[day];
+            const dateStr = formatShortDate(getDateForDayInCurrentWeek(day));
+            document.getElementById('today-date-label').innerText = dateStr;
+            document.getElementById('today-workout-title').innerText = data.title;
+            document.getElementById('today-workout-desc').innerText = data.desc;
+            const container = document.getElementById('exercise-cards-container');
+            container.innerHTML = '';
+            
+            let completedCount = 0;
+            data.exercises.forEach((ex, idx) => {
+                const isChecked = completedExercises[idx] || false;
+                if(isChecked) completedCount++;
+
+                container.innerHTML += `
+                    <div class="bg-slate-900 border ${isChecked ? 'border-emerald-600/60 bg-emerald-950/20' : 'border-slate-800'} rounded-xl p-4 flex flex-col justify-between transition">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded">${idx+1} Var</span>
+                                <span class="text-xs text-slate-400">${ex.sets}</span>
+                            </div>
+                            <div class="flex items-start justify-between gap-3">
+                                <h3 class="font-bold ${isChecked ? 'line-through text-slate-400' : 'text-white'} text-base">${ex.name}</h3>
+                                <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleExercise(${idx})" class="w-5 h-5 accent-emerald-500 rounded cursor-pointer mt-1">
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                            <span>${dateStr} • ${ex.type}</span>
+                            <span class="${isChecked ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isChecked ? 'Completed ✓' : 'Pending'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('workout-progress-counter').innerText = `${completedCount}/${data.exercises.length} Done`;
+        }
+
+        function changeDietDay(day) {
+            currentDietDay = day;
+            document.getElementById('diet-day-label').innerText = day;
+            completedMeals = JSON.parse(localStorage.getItem('shankar_diet_' + currentDietDay)) || {};
+            renderDiet(day);
+        }
+
+        function toggleMeal(idx) {
+            completedMeals[idx] = !completedMeals[idx];
+            localStorage.setItem('shankar_diet_' + currentDietDay, JSON.stringify(completedMeals));
+            renderDiet(currentDietDay);
+        }
+
+        function renderDiet(day) {
+            const data = dietPlans[day];
+            const dateStr = formatShortDate(getDateForDayInCurrentWeek(day));
+            document.getElementById('diet-date-label').innerText = dateStr;
+            document.getElementById('diet-day-focus').innerText = data.focus;
+            const container = document.getElementById('diet-cards-container');
+            container.innerHTML = '';
+
+            let doneCount = 0;
+            data.meals.forEach((meal, idx) => {
+                const isChecked = completedMeals[idx] || false;
+                if(isChecked) doneCount++;
+
+                container.innerHTML += `
+                    <div class="bg-slate-900 border ${isChecked ? 'border-emerald-600/60 bg-emerald-950/20' : 'border-slate-800'} rounded-xl p-4 flex flex-col justify-between transition">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded">Meal 0${idx+1}</span>
+                                <span class="text-xs text-slate-400">${meal.tag}</span>
+                            </div>
+                            <div class="flex items-start justify-between gap-3">
+                                <h3 class="font-bold ${isChecked ? 'line-through text-slate-400' : 'text-white'} text-base">${meal.name}</h3>
+                                <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleMeal(${idx})" class="w-5 h-5 accent-emerald-500 rounded cursor-pointer mt-1">
+                            </div>
+                            <p class="text-sm text-slate-300 mt-2">${meal.desc}</p>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                            <span>${dateStr} • Bulking</span>
+                            <span class="${isChecked ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isChecked ? 'Eaten ✓' : 'Pending'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('diet-progress-counter').innerText = `${doneCount}/${data.meals.length} Done`;
+        }
+
+        function changeSkincareDay(day) {
+            currentSkincareDay = day;
+            document.getElementById('skincare-day-label').innerText = day;
+            completedSkincare = JSON.parse(localStorage.getItem('shankar_skincare_' + currentSkincareDay)) || {};
+            renderSkincare(day);
+        }
+
+        function toggleSkincareStep(key) {
+            completedSkincare[key] = !completedSkincare[key];
+            localStorage.setItem('shankar_skincare_' + currentSkincareDay, JSON.stringify(completedSkincare));
+            renderSkincare(currentSkincareDay);
+        }
+
+        function renderSkincare(day) {
+            const data = skincareSchedule[day];
+            document.getElementById('skincare-date-label').innerText = formatShortDate(getDateForDayInCurrentWeek(day));
+            document.getElementById('skincare-day-focus').innerText = data.focus;
+            const amContainer = document.getElementById('skincare-am-container');
+            const pmContainer = document.getElementById('skincare-pm-container');
+            amContainer.innerHTML = '';
+            pmContainer.innerHTML = '';
+
+            let done = 0;
+            const total = data.am.length + data.pm.length;
+
+            data.am.forEach((step, idx) => {
+                const key = `am_${idx}`;
+                const checked = completedSkincare[key] || false;
+                if (checked) done++;
+                amContainer.innerHTML += `
+                    <label class="flex items-start justify-between gap-3 bg-slate-800/60 border ${checked ? 'border-emerald-600/50' : 'border-slate-800'} rounded-lg p-3 cursor-pointer transition">
+                        <span class="text-sm ${checked ? 'line-through text-slate-400' : 'text-slate-200'}"><strong class="text-amber-400">${idx + 1}.</strong> ${step}</span>
+                        <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSkincareStep('${key}')" class="w-4 h-4 accent-emerald-500 rounded mt-0.5 cursor-pointer">
+                    </label>
+                `;
+            });
+
+            data.pm.forEach((step, idx) => {
+                const key = `pm_${idx}`;
+                const checked = completedSkincare[key] || false;
+                if (checked) done++;
+                pmContainer.innerHTML += `
+                    <label class="flex items-start justify-between gap-3 bg-slate-800/60 border ${checked ? 'border-emerald-600/50' : 'border-slate-800'} rounded-lg p-3 cursor-pointer transition">
+                        <span class="text-sm ${checked ? 'line-through text-slate-400' : 'text-slate-200'}"><strong class="text-indigo-400">${idx + 1}.</strong> ${step}</span>
+                        <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSkincareStep('${key}')" class="w-4 h-4 accent-emerald-500 rounded mt-0.5 cursor-pointer">
+                    </label>
+                `;
+            });
+
+            document.getElementById('skincare-progress-counter').innerText = `${done}/${total} Done`;
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: weightHistory.map(w => w.date),
+                    datasets: [{
+                        label: 'Body Weight (kg)',
+                        data: weightHistory.map(w => w.weight),
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#10b981',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            suggestedMin: 50,
+                            suggestedMax: 61,
+                            grid: { color: '#1e293b' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    },
+                    plugins: { legend: { labels: { color: '#f8fafc' } } }
+                }
+            });
+        }
+
+        function refreshChart() {
+            if (!chartInstance) {
+                initChart();
+                return;
+            }
+            chartInstance.data.labels = weightHistory.map(w => w.date);
+            chartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
+            chartInstance.resize();
+            chartInstance.update();
+        }
+
+        function renderWeightTable() {
+            const tbody = document.getElementById('weight-table-body');
+            tbody.innerHTML = '';
+            weightHistory.forEach((entry, idx) => {
+                tbody.innerHTML += `
+                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
+                        <td class="px-4 py-3 font-medium text-white">${entry.date}</td>
+                        <td class="px-4 py-3 font-bold text-emerald-400">${Number(entry.weight).toFixed(1)} kg</td>
+                        <td class="px-4 py-3 text-right">
+                            <button onclick="deleteWeightEntry(${idx})" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 px-2.5 py-1 rounded border border-red-900/50 transition">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openWeightModal() {
+            document.getElementById('weight-modal').classList.remove('hidden');
+            document.getElementById('weight-modal').classList.add('flex');
+        }
+
+        function closeWeightModal() {
+            document.getElementById('weight-modal').classList.add('hidden');
+            document.getElementById('weight-modal').classList.remove('flex');
+        }
+
+        function saveNewWeight() {
+            const dateVal = document.getElementById('modal-date-input').value.trim();
+            const weightVal = parseFloat(document.getElementById('modal-weight-input').value);
+            
+            if(dateVal && !isNaN(weightVal)) {
+                weightHistory.push({ date: dateVal, weight: weightVal });
+                localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
+                
+                updateDisplayWeight();
+                renderWeightTable();
+                refreshChart();
+                
+                closeWeightModal();
+                document.getElementById('modal-weight-input').value = '';
+            }
+        }
+
+        function deleteWeightEntry(idx) {
+            if(weightHistory.length > 1) {
+                weightHistory.splice(idx, 1);
+                localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
+                updateDisplayWeight();
+                renderWeightTable();
+                refreshChart();
+            } else {
+                alert("You must keep at least one weight entry!");
+            }
+        }
+
+        function updateDisplayWeight() {
+            if(weightHistory.length > 0) {
+                const latest = Number(weightHistory[weightHistory.length - 1].weight).toFixed(1);
+                document.getElementById('current-weight-display').innerText = latest;
+                const tabLatest = document.getElementById('progress-latest-weight');
+                if (tabLatest) tabLatest.innerText = `${latest} kg`;
+            }
+        }
+    </script>
+</body>
+</html>
