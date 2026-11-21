@@ -16,7 +16,7 @@
                 <div class="bg-emerald-500 text-slate-950 font-black px-3 py-1.5 rounded-lg text-xl tracking-wider">SF</div>
                 <div>
                     <h1 class="text-xl font-bold tracking-tight text-white">Shankar Fit</h1>
-                    <p class="text-xs text-slate-400">Target: 52kg → 60kg by Jan 15</p>
+                    <p class="text-xs text-slate-400">Target: 52kg → 57-60kg by Jan 15</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -67,9 +67,12 @@
         <section id="tab-workout" class="space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900 border border-slate-800 rounded-xl p-5 gap-4">
                 <div>
-                    <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="today-day-label">Monday</span>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="today-day-label">Monday</span>
+                        <span class="text-xs font-semibold text-slate-300 bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700" id="today-date-label">--</span>
+                    </div>
                     <h2 class="text-2xl font-bold mt-2 text-white" id="today-workout-title">Chest & Triceps</h2>
-                    <p class="text-sm text-slate-400 mt-1">Focus: Heavy horizontal press, upper shelf development, and tricep isolation.</p>
+                    <p class="text-sm text-slate-400 mt-1" id="today-workout-desc">Focus: Heavy horizontal press, upper shelf development, and tricep isolation.</p>
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
                     <span id="workout-progress-counter" class="text-xs font-bold bg-emerald-950 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-800/50">0/6 Done</span>
@@ -105,7 +108,10 @@
         <section id="tab-skincare" class="hidden space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900 border border-slate-800 rounded-xl p-5 gap-4">
                 <div>
-                    <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="skincare-day-label">Monday</span>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="skincare-day-label">Monday</span>
+                        <span class="text-xs font-semibold text-slate-300 bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700" id="skincare-date-label">--</span>
+                    </div>
                     <h2 class="text-2xl font-bold mt-2 text-white">Detan, Brighten & Barrier Care</h2>
                     <p class="text-sm text-slate-400 mt-1" id="skincare-day-focus">Exfoliation Night 1: Gently dissolves tanned, dull surface cells.</p>
                 </div>
@@ -161,7 +167,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-white">Weight Gain Trajectory (52kg → 60kg)</h2>
-                        <p class="text-sm text-slate-400">Log your weekly progress to track lean mass gains.</p>
+                        <p class="text-sm text-slate-400">Latest logged weight: <span id="progress-latest-weight" class="font-bold text-emerald-400">52.0 kg</span></p>
                     </div>
                     <button onclick="openWeightModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Weekly Weigh-In</button>
                 </div>
@@ -213,8 +219,10 @@
     </div>
 
     <script>
+        const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
         const workouts = {
-            "Monday": { title: "Chest & Triceps", desc: "Heavy horizontal press and upper chest focus.", exercises: [
+            "Monday": { title: "Chest & Triceps", desc: "Heavy horizontal press, upper shelf development, and tricep isolation.", exercises: [
                 { name: "Flat Barbell Bench Press", sets: "3 sets × 6-8 reps", type: "Compound" },
                 { name: "Incline Dumbbell Press", sets: "3 sets × 8-10 reps", type: "Compound" },
                 { name: "Chest Dips or Machine Flyes", sets: "3 sets × 10-12 reps", type: "Accessory" },
@@ -385,21 +393,45 @@
             { date: 'Nov 17', weight: 52.0 }
         ];
 
-        let currentDay = 'Monday';
+        function getActualDayName(dateObj = new Date()) {
+            const jsDay = dateObj.getDay(); // 0 = Sun, 1 = Mon ... 6 = Sat
+            return jsDay === 0 ? "Sunday" : dayOrder[jsDay - 1];
+        }
+
+        function formatShortDate(dateObj) {
+            return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function getDateForDayInCurrentWeek(dayName) {
+            const now = new Date();
+            const currentIndex = dayOrder.indexOf(getActualDayName(now));
+            const targetIndex = dayOrder.indexOf(dayName);
+            const diff = targetIndex - currentIndex;
+            const targetDate = new Date(now);
+            targetDate.setDate(now.getDate() + diff);
+            return targetDate;
+        }
+
+        let currentDay = getActualDayName(new Date());
         let completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
-        let currentSkincareDay = 'Monday';
+        let currentSkincareDay = currentDay;
         let completedSkincare = JSON.parse(localStorage.getItem('shankar_skincare_' + currentSkincareDay)) || {};
         let chartInstance = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             calculateDaysLeft();
-            renderWorkout('Monday');
+            document.getElementById('day-selector').value = currentDay;
+            document.getElementById('today-day-label').innerText = currentDay;
+            document.getElementById('skincare-day-selector').value = currentSkincareDay;
+            document.getElementById('skincare-day-label').innerText = currentSkincareDay;
+
+            renderWorkout(currentDay);
             renderDiet();
-            renderSkincare('Monday');
+            renderSkincare(currentSkincareDay);
             initChart();
             updateDisplayWeight();
             renderWeightTable();
-            document.getElementById('modal-date-input').value = 'Nov 17';
+            document.getElementById('modal-date-input').value = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed', err));
@@ -423,7 +455,9 @@
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
             document.getElementById(`tab-btn-${tab}`).classList.add('border-emerald-500', 'text-emerald-400');
             document.getElementById(`tab-btn-${tab}`).classList.remove('border-transparent', 'text-slate-400');
-            if(tab === 'progress' && chartInstance) chartInstance.update();
+            if(tab === 'progress') {
+                refreshChart();
+            }
         }
 
         function changeWorkoutDay(day) {
@@ -441,7 +475,10 @@
 
         function renderWorkout(day) {
             const data = workouts[day];
+            const dateStr = formatShortDate(getDateForDayInCurrentWeek(day));
+            document.getElementById('today-date-label').innerText = dateStr;
             document.getElementById('today-workout-title').innerText = data.title;
+            document.getElementById('today-workout-desc').innerText = data.desc;
             const container = document.getElementById('exercise-cards-container');
             container.innerHTML = '';
             
@@ -463,7 +500,7 @@
                             </div>
                         </div>
                         <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                            <span>Type: ${ex.type}</span>
+                            <span>${dateStr} • ${ex.type}</span>
                             <span class="${isChecked ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isChecked ? 'Completed ✓' : 'Pending'}</span>
                         </div>
                     </div>
@@ -505,6 +542,7 @@
 
         function renderSkincare(day) {
             const data = skincareSchedule[day];
+            document.getElementById('skincare-date-label').innerText = formatShortDate(getDateForDayInCurrentWeek(day));
             document.getElementById('skincare-day-focus').innerText = data.focus;
             const amContainer = document.getElementById('skincare-am-container');
             const pmContainer = document.getElementById('skincare-pm-container');
@@ -551,8 +589,10 @@
                         label: 'Body Weight (kg)',
                         data: weightHistory.map(w => w.weight),
                         borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
                         borderWidth: 3,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#10b981',
                         fill: true,
                         tension: 0.3
                     }]
@@ -562,8 +602,8 @@
                     maintainAspectRatio: false,
                     scales: {
                         y: { 
-                            min: 50, 
-                            max: 62,
+                            suggestedMin: 50,
+                            suggestedMax: 61,
                             grid: { color: '#1e293b' },
                             ticks: { color: '#94a3b8' }
                         },
@@ -577,6 +617,17 @@
             });
         }
 
+        function refreshChart() {
+            if (!chartInstance) {
+                initChart();
+                return;
+            }
+            chartInstance.data.labels = weightHistory.map(w => w.date);
+            chartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
+            chartInstance.resize();
+            chartInstance.update();
+        }
+
         function renderWeightTable() {
             const tbody = document.getElementById('weight-table-body');
             tbody.innerHTML = '';
@@ -584,7 +635,7 @@
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
                         <td class="px-4 py-3 font-medium text-white">${entry.date}</td>
-                        <td class="px-4 py-3 font-bold text-emerald-400">${entry.weight.toFixed(1)} kg</td>
+                        <td class="px-4 py-3 font-bold text-emerald-400">${Number(entry.weight).toFixed(1)} kg</td>
                         <td class="px-4 py-3 text-right">
                             <button onclick="deleteWeightEntry(${idx})" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 px-2.5 py-1 rounded border border-red-900/50 transition">Delete</button>
                         </td>
@@ -613,10 +664,7 @@
                 
                 updateDisplayWeight();
                 renderWeightTable();
-                
-                chartInstance.data.labels = weightHistory.map(w => w.date);
-                chartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
-                chartInstance.update();
+                refreshChart();
                 
                 closeWeightModal();
                 document.getElementById('modal-weight-input').value = '';
@@ -629,9 +677,7 @@
                 localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
                 updateDisplayWeight();
                 renderWeightTable();
-                chartInstance.data.labels = weightHistory.map(w => w.date);
-                chartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
-                chartInstance.update();
+                refreshChart();
             } else {
                 alert("You must keep at least one weight entry!");
             }
@@ -639,7 +685,10 @@
 
         function updateDisplayWeight() {
             if(weightHistory.length > 0) {
-                document.getElementById('current-weight-display').innerText = weightHistory[weightHistory.length - 1].weight.toFixed(1);
+                const latest = Number(weightHistory[weightHistory.length - 1].weight).toFixed(1);
+                document.getElementById('current-weight-display').innerText = latest;
+                const tabLatest = document.getElementById('progress-latest-weight');
+                if (tabLatest) tabLatest.innerText = `${latest} kg`;
             }
         }
     </script>
