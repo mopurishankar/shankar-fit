@@ -1,7 +1,8 @@
 {
   "name": "Shankar Fit",
   "short_name": "Shankar Fit",
-  "start_url": "./index.html",
+  "description": "Bulking diet, 6-day workout split, AM/PM skincare, and weight tracker.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#030712",
