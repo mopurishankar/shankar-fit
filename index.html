@@ -91,9 +91,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="exercise-cards-container">
-                <!-- Populated via JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="exercise-cards-container"></div>
         </section>
 
         <!-- TAB 2: DIET -->
@@ -121,9 +119,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="diet-cards-container">
-                <!-- Populated via JS -->
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="diet-cards-container"></div>
         </section>
 
         <!-- TAB 3: SKINCARE -->
@@ -152,30 +148,23 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- AM Card -->
                 <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <h3 class="text-lg font-bold text-amber-400">Morning Routine (AM)</h3>
                         <span class="text-xs text-slate-400">Brighten & Protect</span>
                     </div>
-                    <div id="skincare-am-container" class="space-y-3">
-                        <!-- Populated via JS -->
-                    </div>
+                    <div id="skincare-am-container" class="space-y-3"></div>
                 </div>
 
-                <!-- PM Card -->
                 <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                         <h3 class="text-lg font-bold text-indigo-400">Night / Post-Gym Routine (PM)</h3>
                         <span class="text-xs text-slate-400">Detan & Repair</span>
                     </div>
-                    <div id="skincare-pm-container" class="space-y-3">
-                        <!-- Populated via JS -->
-                    </div>
+                    <div id="skincare-pm-container" class="space-y-3"></div>
                 </div>
             </div>
 
-            <!-- Evening Gym & Dryness Rules -->
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
                 <h3 class="text-base font-bold text-white">Evening Gym & Dryness Rules</h3>
                 <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Evening Workout Shift:</span> Wash with gentle cleanser right after the gym and apply that day's PM routine immediately—skip washing a second time at bedtime to prevent extra dryness.</p>
@@ -193,12 +182,11 @@
                     </div>
                     <button onclick="openWeightModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Weekly Weigh-In</button>
                 </div>
-                
+
                 <div class="h-72 w-full">
                     <canvas id="weightChart"></canvas>
                 </div>
 
-                <!-- Weight Log Table -->
                 <div class="mt-6 pt-6 border-t border-slate-800">
                     <h3 class="text-lg font-bold text-white mb-3">Weigh-In History</h3>
                     <div class="overflow-x-auto">
@@ -210,9 +198,7 @@
                                     <th class="px-4 py-3 rounded-r-lg text-right">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="weight-table-body">
-                                <!-- Populated via JS -->
-                            </tbody>
+                            <tbody id="weight-table-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -339,168 +325,29 @@
         ];
 
         const dietPlans = {
-            "Monday": {
-                focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.",
-                meals: [
-                    ...baseMeals,
-                    { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }
-                ]
-            },
-            "Tuesday": {
-                focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.",
-                meals: [
-                    ...baseMeals.slice(0, 3),
-                    { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" },
-                    baseMeals[4],
-                    { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }
-                ]
-            },
-            "Wednesday": {
-                focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.",
-                meals: [
-                    ...baseMeals,
-                    { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }
-                ]
-            },
-            "Thursday": {
-                focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.",
-                meals: [
-                    ...baseMeals.slice(0, 3),
-                    { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" },
-                    baseMeals[4],
-                    { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }
-                ]
-            },
-            "Friday": {
-                focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.",
-                meals: [
-                    ...baseMeals,
-                    { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }
-                ]
-            },
-            "Saturday": {
-                focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.",
-                meals: [
-                    ...baseMeals.slice(0, 3),
-                    { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" },
-                    baseMeals[4],
-                    { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }
-                ]
-            },
-            "Sunday": {
-                focus: "Rest & recovery calorie surplus with full staples, eggs, curd, salad & Nakpro Gold Mass Gainer.",
-                meals: [
-                    ...baseMeals,
-                    { name: "Evening Dinner (8:30 PM)", desc: "Full bulking dinner with dal, aloo/soybean, rice/chapatis & salad.", tag: "Dinner" }
-                ]
-            }
+            "Monday": { focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }] },
+            "Tuesday": { focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.", meals: [...baseMeals.slice(0, 3), { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" }, baseMeals[4], { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }] },
+            "Wednesday": { focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }] },
+            "Thursday": { focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.", meals: [...baseMeals.slice(0, 3), { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" }, baseMeals[4], { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }] },
+            "Friday": { focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }] },
+            "Saturday": { focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.", meals: [...baseMeals.slice(0, 3), { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" }, baseMeals[4], { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }] },
+            "Sunday": { focus: "Rest & recovery calorie surplus with full staples, eggs, curd, salad & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Full bulking dinner with dal, aloo/soybean, rice/chapatis & salad.", tag: "Dinner" }] }
         };
 
         const skincareSchedule = {
-            "Monday": {
-                focus: "Exfoliation Night 1: Gently dissolves tanned, dull surface cells.",
-                am: [
-                    "Gentle Cleanser (lukewarm water)",
-                    "Minimalist 10% Vitamin C Serum",
-                    "Barrier Moisturizer (within 60s)",
-                    "Pond's Sunscreen (SPF 50)"
-                ],
-                pm: [
-                    "Gentle Cleanser",
-                    "Glycolic Acid 5% Toner (on completely dry skin)",
-                    "Thick Barrier Moisturizer"
-                ]
-            },
-            "Tuesday": {
-                focus: "Barrier Recovery: Deeply hydrates and calms skin after Monday's exfoliation.",
-                am: [
-                    "Gentle Cleanser (Skip icing today)",
-                    "Minimalist 10% Vitamin C Serum",
-                    "Barrier Moisturizer",
-                    "Pond's Sunscreen (SPF 50)"
-                ],
-                pm: [
-                    "Gentle Cleanser",
-                    "Plum Goji Berry",
-                    "Thick Barrier Moisturizer"
-                ]
-            },
-            "Wednesday": {
-                focus: "Cooling Hydration & Detan: Soothes sun-heated skin, replenishes water loss, and gently fades tan.",
-                am: [
-                    "Cloth-Wrapped Ice (1 min max)",
-                    "Gentle Cleanser",
-                    "Minimalist 10% Vitamin C Serum",
-                    "Barrier Moisturizer + Pond's Sunscreen"
-                ],
-                pm: [
-                    "Cucumber Paste + Curd/Aloe Mask (10–12 mins)",
-                    "Rinse with cool water",
-                    "Plum Goji Berry + Thick Barrier Moisturizer"
-                ]
-            },
-            "Thursday": {
-                focus: "Exfoliation Night 2: Second weekly chemical exfoliation to lift stubborn tan.",
-                am: [
-                    "Cloth-Wrapped Ice (1 min max)",
-                    "Gentle Cleanser",
-                    "Minimalist 10% Vitamin C Serum",
-                    "Barrier Moisturizer + Pond's Sunscreen"
-                ],
-                pm: [
-                    "Gentle Cleanser",
-                    "Glycolic Acid 5% Toner (on completely dry skin)",
-                    "Thick Barrier Moisturizer"
-                ]
-            },
-            "Friday": {
-                focus: "Barrier Recovery: Restores moisture and prevents post-wash tightness or flaking.",
-                am: [
-                    "Gentle Cleanser (Skip icing today)",
-                    "Minimalist 10% Vitamin C Serum",
-                    "Barrier Moisturizer",
-                    "Pond's Sunscreen (SPF 50)"
-                ],
-                pm: [
-                    "Gentle Cleanser",
-                    "Plum Goji Berry",
-                    "Thick Barrier Moisturizer"
-                ]
-            },
-            "Saturday": {
-                focus: "Antioxidant Repair: Brightens uneven tone and strengthens your skin barrier.",
-                am: [
-                    "Cloth-Wrapped Ice (1 min max)",
-                    "Gentle Cleanser",
-                    "Minimalist 10% Vitamin C Serum",
-                    "Barrier Moisturizer + Pond's Sunscreen"
-                ],
-                pm: [
-                    "Gentle Cleanser",
-                    "Plum Goji Berry",
-                    "Thick Barrier Moisturizer"
-                ]
-            },
-            "Sunday": {
-                focus: "Weekly Detan Boost: Lactic acid in curd + turmeric brightens dullness while honey locks in moisture.",
-                am: [
-                    "Cloth-Wrapped Ice (1 min max)",
-                    "Gentle Cleanser",
-                    "Minimalist 10% Vitamin C Serum",
-                    "Barrier Moisturizer + Pond's Sunscreen"
-                ],
-                pm: [
-                    "Turmeric + Curd + Honey Pack (10–12 mins)",
-                    "Rinse with cool water",
-                    "Thick Barrier Moisturizer"
-                ]
-            }
+            "Monday": { focus: "Exfoliation Night 1: Gently dissolves tanned, dull surface cells.", am: ["Gentle Cleanser (lukewarm water)", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer (within 60s)", "Pond's Sunscreen (SPF 50)"], pm: ["Gentle Cleanser", "Glycolic Acid 5% Toner (on completely dry skin)", "Thick Barrier Moisturizer"] },
+            "Tuesday": { focus: "Barrier Recovery: Deeply hydrates and calms skin after Monday's exfoliation.", am: ["Gentle Cleanser (Skip icing today)", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer", "Pond's Sunscreen (SPF 50)"], pm: ["Gentle Cleanser", "Plum Goji Berry", "Thick Barrier Moisturizer"] },
+            "Wednesday": { focus: "Cooling Hydration & Detan: Soothes sun-heated skin, replenishes water loss, and gently fades tan.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Cucumber Paste + Curd/Aloe Mask (10–12 mins)", "Rinse with cool water", "Plum Goji Berry + Thick Barrier Moisturizer"] },
+            "Thursday": { focus: "Exfoliation Night 2: Second weekly chemical exfoliation to lift stubborn tan.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Gentle Cleanser", "Glycolic Acid 5% Toner (on completely dry skin)", "Thick Barrier Moisturizer"] },
+            "Friday": { focus: "Barrier Recovery: Restores moisture and prevents post-wash tightness or flaking.", am: ["Gentle Cleanser (Skip icing today)", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer", "Pond's Sunscreen (SPF 50)"], pm: ["Gentle Cleanser", "Plum Goji Berry", "Thick Barrier Moisturizer"] },
+            "Saturday": { focus: "Antioxidant Repair: Brightens uneven tone and strengthens your skin barrier.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Gentle Cleanser", "Plum Goji Berry", "Thick Barrier Moisturizer"] },
+            "Sunday": { focus: "Weekly Detan Boost: Lactic acid in curd + turmeric brightens dullness while honey locks in moisture.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Turmeric + Curd + Honey Pack (10–12 mins)", "Rinse with cool water", "Thick Barrier Moisturizer"] }
         };
 
         let weightHistory = JSON.parse(localStorage.getItem('shankar_weights')) || [
             { date: 'Oct 01', weight: 51.2 },
             { date: 'Nov 01', weight: 52.0 },
-            { date: 'Nov 21', weight: 52.0 }
+            { date: 'Nov 22', weight: 52.0 }
         ];
 
         function getActualDayName(dateObj = new Date()) {
@@ -577,10 +424,8 @@
 
             document.getElementById('day-selector').value = currentDay;
             document.getElementById('today-day-label').innerText = currentDay;
-
             document.getElementById('diet-day-selector').value = currentDietDay;
             document.getElementById('diet-day-label').innerText = currentDietDay;
-
             document.getElementById('skincare-day-selector').value = currentSkincareDay;
             document.getElementById('skincare-day-label').innerText = currentSkincareDay;
 
@@ -797,16 +642,8 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: {
-                            suggestedMin: 50,
-                            suggestedMax: 61,
-                            grid: { color: '#1e293b' },
-                            ticks: { color: '#94a3b8' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#94a3b8' }
-                        }
+                        y: { suggestedMin: 50, suggestedMax: 61, grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
                     },
                     plugins: { legend: { labels: { color: '#f8fafc' } } }
                 }
@@ -853,15 +690,12 @@
         function saveNewWeight() {
             const dateVal = document.getElementById('modal-date-input').value.trim();
             const weightVal = parseFloat(document.getElementById('modal-weight-input').value);
-
             if (dateVal && !isNaN(weightVal)) {
                 weightHistory.push({ date: dateVal, weight: weightVal });
                 localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
-
                 updateDisplayWeight();
                 renderWeightTable();
                 refreshChart();
-
                 closeWeightModal();
                 document.getElementById('modal-weight-input').value = '';
             }
