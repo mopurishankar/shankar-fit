@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shankar Fit - Bulking & Training Dashboard</title>
+    <title>best-fit - Bulking & Training Dashboard</title>
     <link rel="manifest" href="./manifest.json">
     <link id="app-favicon" rel="icon" type="image/png">
     <link id="apple-touch-icon" rel="apple-touch-icon">
@@ -16,9 +16,9 @@
     <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
-                <div class="bg-emerald-500 text-slate-950 font-black px-3 py-1.5 rounded-lg text-xl tracking-wider">SF</div>
+                <div class="bg-emerald-500 text-slate-950 font-black px-3 py-1.5 rounded-lg text-xl tracking-wider">BF</div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight text-white">Shankar Fit</h1>
+                    <h1 class="text-xl font-bold tracking-tight text-white">best-fit</h1>
                     <p class="text-xs text-slate-400">Target: 52kg → 57-60kg by Jan 15</p>
                 </div>
             </div>
@@ -166,9 +166,9 @@
             </div>
 
             <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
-                <h3 class="text-base font-bold text-white">Evening Gym & Dryness Rules</h3>
-                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Evening Workout Shift:</span> Wash with gentle cleanser right after the gym and apply that day's PM routine immediately—skip washing a second time at bedtime to prevent extra dryness.</p>
-                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Dryness Guardrail:</span> Apply moisturizer within 60 seconds while skin is slightly damp, wrap ice in a soft cloth (1 min max), and rinse masks before they dry out completely.</p>
+                <h3 class="text-base font-bold text-white">Evening Gym & Layering Rules</h3>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Evening Workout Shift:</span> Wash with Pond's Detan Face Wash right after the gym and apply that day's PM routine immediately—skip washing a second time at bedtime to prevent cheek dryness.</p>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">No Double-Layering:</span> Never apply Deconstruct Niacinamide + Alpha Arbutin serum or the Cucumber + Curd + Turmeric pack on Monday/Thursday nights alongside Plum 5% Glycolic Acid & Goji Berry Toner.</p>
             </div>
         </section>
 
@@ -213,7 +213,7 @@
             <p class="text-sm text-slate-400">Record your weight and date to update your progress chart.</p>
             <div>
                 <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Date / Label</label>
-                <input type="text" id="modal-date-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. Nov 24">
+                <input type="text" id="modal-date-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. Nov 26">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Weight (kg)</label>
@@ -277,450 +277,283 @@
                     { name: "Flat Dumbbell Press", sets: "3 sets × 8-10 reps", type: "Chest (2/3)" },
                     { name: "Chest Dips or Machine Flyes", sets: "3 sets × 10-12 reps", type: "Chest (3/3)" },
                     { name: "Close-Grip Bench Press", sets: "3 sets × 8-10 reps", type: "Triceps (1/3)" },
-                    { name: "Overhead Tricep Extension", sets: "3 sets × 10-12 reps", type: "Triceps (2/3)" },
-                    { name: "Rope Tricep Pushdowns", sets: "3 sets × 12-15 reps", type: "Triceps (3/3)" }
-                ]
-            },
-            "Friday": {
-                title: "Back & Biceps",
-                desc: "Back (3), Biceps (3)",
-                exercises: [
-                    { name: "Barbell Deadlift / Rack Pulls", sets: "3 sets × 5 reps", type: "Back (1/3)" },
-                    { name: "Underhand Grip Lat Pulldown", sets: "3 sets × 8-10 reps", type: "Back (2/3)" },
-                    { name: "Seated Cable Row", sets: "3 sets × 10-12 reps", type: "Back (3/3)" },
-                    { name: "Preacher / Concentration Curls", sets: "3 sets × 10-12 reps", type: "Biceps (1/3)" },
-                    { name: "Standing EZ-Bar Curl", sets: "3 sets × 10-12 reps", type: "Biceps (2/3)" },
-                    { name: "Reverse Cable Curls", sets: "3 sets × 12-15 reps", type: "Biceps (3/3)" }
-                ]
-            },
-            "Saturday": {
-                title: "Legs, Core & Forearms",
-                desc: "Legs (4), Core (1), Forearms (1)",
-                exercises: [
-                    { name: "Barbell Back Squat / Leg Press", sets: "3 sets × 6-8 reps", type: "Legs (1/4)" },
-                    { name: "Romanian Deadlifts (RDLs)", sets: "3 sets × 8-10 reps", type: "Legs (2/4)" },
-                    { name: "Bulgarian Split Squats", sets: "3 sets × 10 reps/leg", type: "Legs (3/4)" },
-                    { name: "Seated Leg Curls", sets: "3 sets × 12-15 reps", type: "Legs (4/4)" },
-                    { name: "Decline Weighted Crunches / Plank", sets: "3 sets", type: "Core (1/1)" },
-                    { name: "Farmer's Carry / Reverse Barbell Curls", sets: "3 sets", type: "Forearms (1/1)" }
-                ]
-            },
-            "Sunday": {
-                title: "Rest & Active Recovery",
-                desc: "Muscle repair, gentle mobility, and heavy calorie intake.",
-                exercises: [
-                    { name: "Light Walking / Stretching", sets: "20 minutes", type: "Recovery" },
-                    { name: "Hydration Focus", sets: "3.5 - 4 Liters", type: "Habit" },
-                    { name: "Meal Prep & Surplus Check", sets: "Review Weekly Macros", type: "Nutrition" }
-                ]
-            }
-        };
+                    { name: "Overhead <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>best-fit - Bulking & Training Dashboard</title>
+    <link rel="manifest" href="./manifest.json">
+    <link id="app-favicon" rel="icon" type="image/png">
+    <link id="apple-touch-icon" rel="apple-touch-icon">
+    <meta name="theme-color" content="#10b981">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen pb-12">
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-500 text-slate-950 font-black px-3 py-1.5 rounded-lg text-xl tracking-wider">BF</div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-white">best-fit</h1>
+                    <p class="text-xs text-slate-400">Target: 52kg → 57-60kg by Jan 15</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-sm">
+                    Current: <span id="current-weight-display" class="font-bold text-emerald-400">52.0</span> kg
+                </div>
+                <button onclick="openWeightModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition">Update Weight</button>
+            </div>
+        </div>
+    </header>
 
-        const baseMeals = [
-            { name: "Pre-Workout Fuel (5:15 AM)", desc: "1 Banana + handful of soaked almonds/raisins before training.", tag: "Pre-Gym" },
-            { name: "Post-Workout Shake & Oatmeal", desc: "Nakpro Gold Mass Gainer shake + rolled oats with milk, chia seeds & daily eggs.", tag: "Post-Gym" },
-            { name: "Aloo & Soybean Curry", desc: "Boiled potato (aloo) & soybean chunks with rice or chapatis.", tag: "Carbs + Protein" },
-            { name: "Dal & Salad Lunch", desc: "Thick dal + rice/chapatis + fresh cucumber (kheera) & carrots.", tag: "Lunch" },
-            { name: "Curd & Snack Bowl", desc: "Curd bowl with eggs or nuts for steady afternoon calories.", tag: "Snack" }
-        ];
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-8">
+        <!-- Quick Stats Banner -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-400 uppercase font-semibold">Goal Timeline</p>
+                    <p class="text-lg font-bold text-white">Jan 15, 2027</p>
+                </div>
+                <div class="text-emerald-400 bg-emerald-950/50 p-2.5 rounded-lg font-bold text-sm" id="days-left-badge">-- Days Left</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-400 uppercase font-semibold">Daily Calorie Target</p>
+                    <p class="text-lg font-bold text-emerald-400">3,000 - 3,200 kcal</p>
+                </div>
+                <div class="text-blue-400 bg-blue-950/50 p-2.5 rounded-lg font-bold text-sm">Surplus Mode</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-400 uppercase font-semibold">Training Split</p>
+                    <p class="text-lg font-bold text-purple-400" id="split-badge-text">6-7 Variations / Day</p>
+                </div>
+                <div class="text-purple-400 bg-purple-950/50 p-2.5 rounded-lg font-bold text-sm">5:50 AM AMRAP</div>
+            </div>
+        </div>
 
-        const dietPlans = {
-            "Monday": { focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }] },
-            "Tuesday": { focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.", meals: [...baseMeals.slice(0, 3), { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" }, baseMeals[4], { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }] },
-            "Wednesday": { focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }] },
-            "Thursday": { focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.", meals: [...baseMeals.slice(0, 3), { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" }, baseMeals[4], { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }] },
-            "Friday": { focus: "Veg surplus day with dal, aloo, soybean, oatmeal, eggs, curd & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Aloo/soybean/dal + rice or chapatis + cucumber & carrot salad.", tag: "Dinner" }] },
-            "Saturday": { focus: "Chicken day (2-3x/week) paired with dal, aloo, soybean, oatmeal, eggs & Nakpro Gold Mass Gainer.", meals: [...baseMeals.slice(0, 3), { name: "Chicken & Dal Lunch", desc: "Chicken preparation + thick dal + rice/chapatis + cucumber & carrots.", tag: "Chicken Day" }, baseMeals[4], { name: "Evening Dinner (8:30 PM)", desc: "Chicken or soybean + dal/aloo + rice/chapatis + salad.", tag: "Dinner" }] },
-            "Sunday": { focus: "Rest & recovery calorie surplus with full staples, eggs, curd, salad & Nakpro Gold Mass Gainer.", meals: [...baseMeals, { name: "Evening Dinner (8:30 PM)", desc: "Full bulking dinner with dal, aloo/soybean, rice/chapatis & salad.", tag: "Dinner" }] }
-        };
+        <!-- Navigation Tabs -->
+        <div class="flex border-b border-slate-800 space-x-6 overflow-x-auto">
+            <button onclick="switchTab('workout')" id="tab-btn-workout" class="pb-3 border-b-2 border-emerald-500 font-semibold text-emerald-400 whitespace-nowrap transition">Today's Workout</button>
+            <button onclick="switchTab('diet')" id="tab-btn-diet" class="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-white whitespace-nowrap transition">Bulking Diet Plan</button>
+            <button onclick="switchTab('skincare')" id="tab-btn-skincare" class="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-white whitespace-nowrap transition">Skincare (AM/PM)</button>
+            <button onclick="switchTab('progress')" id="tab-btn-progress" class="pb-3 border-b-2 border-transparent font-medium text-slate-400 hover:text-white whitespace-nowrap transition">Weight & Progress</button>
+        </div>
 
-        const skincareSchedule = {
-            "Monday": { focus: "Exfoliation Night 1: Gently dissolves tanned, dull surface cells.", am: ["Gentle Cleanser (lukewarm water)", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer (within 60s)", "Pond's Sunscreen (SPF 50)"], pm: ["Gentle Cleanser", "Glycolic Acid 5% Toner (on completely dry skin)", "Thick Barrier Moisturizer"] },
-            "Tuesday": { focus: "Barrier Recovery: Deeply hydrates and calms skin after Monday's exfoliation.", am: ["Gentle Cleanser (Skip icing today)", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer", "Pond's Sunscreen (SPF 50)"], pm: ["Gentle Cleanser", "Plum Goji Berry", "Thick Barrier Moisturizer"] },
-            "Wednesday": { focus: "Cooling Hydration & Detan: Soothes sun-heated skin, replenishes water loss, and gently fades tan.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Cucumber Paste + Curd/Aloe Mask (10–12 mins)", "Rinse with cool water", "Plum Goji Berry + Thick Barrier Moisturizer"] },
-            "Thursday": { focus: "Exfoliation Night 2: Second weekly chemical exfoliation to lift stubborn tan.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Gentle Cleanser", "Glycolic Acid 5% Toner (on completely dry skin)", "Thick Barrier Moisturizer"] },
-            "Friday": { focus: "Barrier Recovery: Restores moisture and prevents post-wash tightness or flaking.", am: ["Gentle Cleanser (Skip icing today)", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer", "Pond's Sunscreen (SPF 50)"], pm: ["Gentle Cleanser", "Plum Goji Berry", "Thick Barrier Moisturizer"] },
-            "Saturday": { focus: "Antioxidant Repair: Brightens uneven tone and strengthens your skin barrier.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Gentle Cleanser", "Plum Goji Berry", "Thick Barrier Moisturizer"] },
-            "Sunday": { focus: "Weekly Detan Boost: Lactic acid in curd + turmeric brightens dullness while honey locks in moisture.", am: ["Cloth-Wrapped Ice (1 min max)", "Gentle Cleanser", "Minimalist 10% Vitamin C Serum", "Barrier Moisturizer + Pond's Sunscreen"], pm: ["Turmeric + Curd + Honey Pack (10–12 mins)", "Rinse with cool water", "Thick Barrier Moisturizer"] }
-        };
-
-        let weightHistory = JSON.parse(localStorage.getItem('shankar_weights')) || [
-            { date: 'Oct 01', weight: 51.2 },
-            { date: 'Nov 01', weight: 52.0 },
-            { date: 'Nov 22', weight: 52.0 }
-        ];
-
-        function getActualDayName(dateObj = new Date()) {
-            const jsDay = dateObj.getDay();
-            return jsDay === 0 ? "Sunday" : dayOrder[jsDay - 1];
-        }
-
-        function formatShortDate(dateObj) {
-            return dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-
-        function getDateForDayInCurrentWeek(dayName) {
-            const now = new Date();
-            const currentIndex = dayOrder.indexOf(getActualDayName(now));
-            const targetIndex = dayOrder.indexOf(dayName);
-            const diff = targetIndex - currentIndex;
-            const targetDate = new Date(now);
-            targetDate.setDate(now.getDate() + diff);
-            return targetDate;
-        }
-
-        function generateDumbbellDataURL(size = 192) {
-            const canvas = document.createElement('canvas');
-            canvas.width = size;
-            canvas.height = size;
-            const ctx = canvas.getContext('2d');
-
-            ctx.fillStyle = '#030712';
-            ctx.beginPath();
-            if (ctx.roundRect) {
-                ctx.roundRect(0, 0, size, size, size * 0.22);
-            } else {
-                ctx.rect(0, 0, size, size);
-            }
-            ctx.fill();
-
-            ctx.fillStyle = '#10b981';
-            const yCenter = size * 0.5;
-            const barH = size * 0.08;
-            ctx.fillRect(size * 0.22, yCenter - barH / 2, size * 0.56, barH);
-
-            const innerW = size * 0.09;
-            const innerH = size * 0.30;
-            ctx.fillRect(size * 0.25, yCenter - innerH / 2, innerW, innerH);
-            ctx.fillRect(size * 0.66, yCenter - innerH / 2, innerW, innerH);
-
-            const outerW = size * 0.08;
-            const outerH = size * 0.20;
-            ctx.fillRect(size * 0.16, yCenter - outerH / 2, outerW, outerH);
-            ctx.fillRect(size * 0.76, yCenter - outerH / 2, outerW, outerH);
-
-            return canvas.toDataURL('image/png');
-        }
-
-        function injectAppIcons() {
-            const icon192 = generateDumbbellDataURL(192);
-            const favicon = document.getElementById('app-favicon');
-            const appleIcon = document.getElementById('apple-touch-icon');
-            if (favicon) favicon.href = icon192;
-            if (appleIcon) appleIcon.href = icon192;
-        }
-
-        let currentDay = getActualDayName(new Date());
-        let completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
-        let currentDietDay = currentDay;
-        let completedMeals = JSON.parse(localStorage.getItem('shankar_diet_' + currentDietDay)) || {};
-        let currentSkincareDay = currentDay;
-        let completedSkincare = JSON.parse(localStorage.getItem('shankar_skincare_' + currentSkincareDay)) || {};
-        let chartInstance = null;
-
-        window.addEventListener('DOMContentLoaded', () => {
-            injectAppIcons();
-            calculateDaysLeft();
-
-            document.getElementById('day-selector').value = currentDay;
-            document.getElementById('today-day-label').innerText = currentDay;
-            document.getElementById('diet-day-selector').value = currentDietDay;
-            document.getElementById('diet-day-label').innerText = currentDietDay;
-            document.getElementById('skincare-day-selector').value = currentSkincareDay;
-            document.getElementById('skincare-day-label').innerText = currentSkincareDay;
-
-            renderWorkout(currentDay);
-            renderDiet(currentDietDay);
-            renderSkincare(currentSkincareDay);
-            initChart();
-            updateDisplayWeight();
-            renderWeightTable();
-            document.getElementById('modal-date-input').value = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed', err));
-            }
-        });
-
-        function calculateDaysLeft() {
-            const target = new Date('2027-01-15');
-            const today = new Date();
-            const diffTime = target - today;
-            const diffDays = Math.max(0, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-            document.getElementById('days-left-badge').innerText = `${diffDays} Days Left`;
-        }
-
-        function switchTab(tab) {
-            ['workout', 'diet', 'skincare', 'progress'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                document.getElementById(`tab-btn-${t}`).classList.remove('border-emerald-500', 'text-emerald-400');
-                document.getElementById(`tab-btn-${t}`).classList.add('border-transparent', 'text-slate-400');
-            });
-            document.getElementById(`tab-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-btn-${tab}`).classList.add('border-emerald-500', 'text-emerald-400');
-            document.getElementById(`tab-btn-${tab}`).classList.remove('border-transparent', 'text-slate-400');
-            if (tab === 'progress') {
-                refreshChart();
-            }
-        }
-
-        function changeWorkoutDay(day) {
-            currentDay = day;
-            document.getElementById('today-day-label').innerText = day;
-            completedExercises = JSON.parse(localStorage.getItem('shankar_completed_' + currentDay)) || {};
-            renderWorkout(day);
-        }
-
-        function toggleExercise(idx) {
-            completedExercises[idx] = !completedExercises[idx];
-            localStorage.setItem('shankar_completed_' + currentDay, JSON.stringify(completedExercises));
-            renderWorkout(currentDay);
-        }
-
-        function renderWorkout(day) {
-            const data = workouts[day];
-            const dateStr = formatShortDate(getDateForDayInCurrentWeek(day));
-            document.getElementById('today-date-label').innerText = dateStr;
-            document.getElementById('today-workout-title').innerText = data.title;
-            document.getElementById('today-workout-desc').innerText = data.desc;
-            const badge = document.getElementById('split-badge-text');
-            if (badge) {
-                badge.innerText = day === 'Sunday' ? 'Rest & Recovery' : `${data.exercises.length} Variations / Day`;
-            }
-            const container = document.getElementById('exercise-cards-container');
-            container.innerHTML = '';
-
-            let completedCount = 0;
-            data.exercises.forEach((ex, idx) => {
-                const isChecked = completedExercises[idx] || false;
-                if (isChecked) completedCount++;
-
-                container.innerHTML += `
-                    <div class="bg-slate-900 border ${isChecked ? 'border-emerald-600/60 bg-emerald-950/20' : 'border-slate-800'} rounded-xl p-4 flex flex-col justify-between transition">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded">${idx + 1} Var</span>
-                                <span class="text-xs text-slate-400">${ex.sets}</span>
-                            </div>
-                            <div class="flex items-start justify-between gap-3">
-                                <h3 class="font-bold ${isChecked ? 'line-through text-slate-400' : 'text-white'} text-base">${ex.name}</h3>
-                                <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleExercise(${idx})" class="w-5 h-5 accent-emerald-500 rounded cursor-pointer mt-1">
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                            <span>${dateStr} • ${ex.type}</span>
-                            <span class="${isChecked ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isChecked ? 'Completed ✓' : 'Pending'}</span>
-                        </div>
+        <!-- TAB 1: WORKOUT -->
+        <section id="tab-workout" class="space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900 border border-slate-800 rounded-xl p-5 gap-4">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="today-day-label">Monday</span>
+                        <span class="text-xs font-semibold text-slate-300 bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700" id="today-date-label">--</span>
                     </div>
-                `;
-            });
+                    <h2 class="text-2xl font-bold mt-2 text-white" id="today-workout-title">Chest, Shoulder & Triceps</h2>
+                    <p class="text-sm text-slate-400 mt-1" id="today-workout-desc">Chest (3), Shoulder (2), Triceps (2)</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <span id="workout-progress-counter" class="text-xs font-bold bg-emerald-950 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-800/50">0/7 Done</span>
+                    <select id="day-selector" onchange="changeWorkoutDay(this.value)" class="bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
+                        <option value="Monday">Monday: Chest (3), Shoulder (2), Triceps (2)</option>
+                        <option value="Tuesday">Tuesday: Back (3), Biceps (2), Forearms (2)</option>
+                        <option value="Wednesday">Wednesday: Shoulder (5), Core (2)</option>
+                        <option value="Thursday">Thursday: Chest (3), Triceps (3)</option>
+                        <option value="Friday">Friday: Back (3), Biceps (3)</option>
+                        <option value="Saturday">Saturday: Legs (4), Core (1), Forearms (1)</option>
+                        <option value="Sunday">Sunday: Rest & Recovery</option>
+                    </select>
+                </div>
+            </div>
 
-            document.getElementById('workout-progress-counter').innerText = `${completedCount}/${data.exercises.length} Done`;
-        }
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="exercise-cards-container"></div>
+        </section>
 
-        function changeDietDay(day) {
-            currentDietDay = day;
-            document.getElementById('diet-day-label').innerText = day;
-            completedMeals = JSON.parse(localStorage.getItem('shankar_diet_' + currentDietDay)) || {};
-            renderDiet(day);
-        }
-
-        function toggleMeal(idx) {
-            completedMeals[idx] = !completedMeals[idx];
-            localStorage.setItem('shankar_diet_' + currentDietDay, JSON.stringify(completedMeals));
-            renderDiet(currentDietDay);
-        }
-
-        function renderDiet(day) {
-            const data = dietPlans[day];
-            const dateStr = formatShortDate(getDateForDayInCurrentWeek(day));
-            document.getElementById('diet-date-label').innerText = dateStr;
-            document.getElementById('diet-day-focus').innerText = data.focus;
-            const container = document.getElementById('diet-cards-container');
-            container.innerHTML = '';
-
-            let doneCount = 0;
-            data.meals.forEach((meal, idx) => {
-                const isChecked = completedMeals[idx] || false;
-                if (isChecked) doneCount++;
-
-                container.innerHTML += `
-                    <div class="bg-slate-900 border ${isChecked ? 'border-emerald-600/60 bg-emerald-950/20' : 'border-slate-800'} rounded-xl p-4 flex flex-col justify-between transition">
-                        <div>
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs font-bold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded">Meal 0${idx + 1}</span>
-                                <span class="text-xs text-slate-400">${meal.tag}</span>
-                            </div>
-                            <div class="flex items-start justify-between gap-3">
-                                <h3 class="font-bold ${isChecked ? 'line-through text-slate-400' : 'text-white'} text-base">${meal.name}</h3>
-                                <input type="checkbox" ${isChecked ? 'checked' : ''} onclick="toggleMeal(${idx})" class="w-5 h-5 accent-emerald-500 rounded cursor-pointer mt-1">
-                            </div>
-                            <p class="text-sm text-slate-300 mt-2">${meal.desc}</p>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                            <span>${dateStr} • Bulking</span>
-                            <span class="${isChecked ? 'text-emerald-400 font-bold' : 'text-slate-500'}">${isChecked ? 'Eaten ✓' : 'Pending'}</span>
-                        </div>
+        <!-- TAB 2: DIET -->
+        <section id="tab-diet" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900 border border-slate-800 rounded-xl p-5 gap-4">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="diet-day-label">Monday</span>
+                        <span class="text-xs font-semibold text-slate-300 bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700" id="diet-date-label">--</span>
                     </div>
-                `;
-            });
+                    <h2 class="text-2xl font-bold mt-2 text-white">Mass-Gaining Nutrition Checklist</h2>
+                    <p class="text-sm text-slate-400 mt-1" id="diet-day-focus">Daily staples: Dal, Aloo, Soybean, Oatmeal, Eggs, Cucumber/Carrots & Nakpro Gold Mass Gainer.</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <span id="diet-progress-counter" class="text-xs font-bold bg-emerald-950 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-800/50">0/6 Done</span>
+                    <select id="diet-day-selector" onchange="changeDietDay(this.value)" class="bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
+                        <option value="Monday">Monday (Veg / High Surplus)</option>
+                        <option value="Tuesday">Tuesday (Chicken Day)</option>
+                        <option value="Wednesday">Wednesday (Veg / High Surplus)</option>
+                        <option value="Thursday">Thursday (Chicken Day)</option>
+                        <option value="Friday">Friday (Veg / High Surplus)</option>
+                        <option value="Saturday">Saturday (Chicken Day)</option>
+                        <option value="Sunday">Sunday (Recovery Surplus)</option>
+                    </select>
+                </div>
+            </div>
 
-            document.getElementById('diet-progress-counter').innerText = `${doneCount}/${data.meals.length} Done`;
-        }
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="diet-cards-container"></div>
+        </section>
 
-        function changeSkincareDay(day) {
-            currentSkincareDay = day;
-            document.getElementById('skincare-day-label').innerText = day;
-            completedSkincare = JSON.parse(localStorage.getItem('shankar_skincare_' + currentSkincareDay)) || {};
-            renderSkincare(day);
-        }
+        <!-- TAB 3: SKINCARE -->
+        <section id="tab-skincare" class="hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-900 border border-slate-800 rounded-xl p-5 gap-4">
+                <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-md" id="skincare-day-label">Monday</span>
+                        <span class="text-xs font-semibold text-slate-300 bg-slate-800 px-2.5 py-1 rounded-md border border-slate-700" id="skincare-date-label">--</span>
+                    </div>
+                    <h2 class="text-2xl font-bold mt-2 text-white">Detan, Brighten & Barrier Care</h2>
+                    <p class="text-sm text-slate-400 mt-1" id="skincare-day-focus">Exfoliation Night 1: Gently dissolves tanned, dull surface cells.</p>
+                </div>
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <span id="skincare-progress-counter" class="text-xs font-bold bg-emerald-950 text-emerald-400 px-3 py-2 rounded-lg border border-emerald-800/50">0/0 Done</span>
+                    <select id="skincare-day-selector" onchange="changeSkincareDay(this.value)" class="bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+            </div>
 
-        function toggleSkincareStep(key) {
-            completedSkincare[key] = !completedSkincare[key];
-            localStorage.setItem('shankar_skincare_' + currentSkincareDay, JSON.stringify(completedSkincare));
-            renderSkincare(currentSkincareDay);
-        }
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="text-lg font-bold text-amber-400">Morning Routine (AM)</h3>
+                        <span class="text-xs text-slate-400">Brighten & Protect</span>
+                    </div>
+                    <div id="skincare-am-container" class="space-y-3"></div>
+                </div>
 
-        function renderSkincare(day) {
-            const data = skincareSchedule[day];
-            document.getElementById('skincare-date-label').innerText = formatShortDate(getDateForDayInCurrentWeek(day));
-            document.getElementById('skincare-day-focus').innerText = data.focus;
-            const amContainer = document.getElementById('skincare-am-container');
-            const pmContainer = document.getElementById('skincare-pm-container');
-            amContainer.innerHTML = '';
-            pmContainer.innerHTML = '';
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <h3 class="text-lg font-bold text-indigo-400">Night / Post-Gym Routine (PM)</h3>
+                        <span class="text-xs text-slate-400">Detan & Repair</span>
+                    </div>
+                    <div id="skincare-pm-container" class="space-y-3"></div>
+                </div>
+            </div>
 
-            let done = 0;
-            const total = data.am.length + data.pm.length;
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-2">
+                <h3 class="text-base font-bold text-white">Evening Gym & Layering Rules</h3>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">Evening Workout Shift:</span> Wash with Pond's Detan Face Wash right after the gym and apply that day's PM routine immediately—skip washing a second time at bedtime to prevent cheek dryness.</p>
+                <p class="text-sm text-slate-300"><span class="font-semibold text-emerald-400">No Double-Layering:</span> Never apply Deconstruct Niacinamide + Alpha Arbutin serum or the Cucumber + Curd + Turmeric pack on Monday/Thursday nights alongside Plum 5% Glycolic Acid & Goji Berry Toner.</p>
+            </div>
+        </section>
 
-            data.am.forEach((step, idx) => {
-                const key = `am_${idx}`;
-                const checked = completedSkincare[key] || false;
-                if (checked) done++;
-                amContainer.innerHTML += `
-                    <label class="flex items-start justify-between gap-3 bg-slate-800/60 border ${checked ? 'border-emerald-600/50' : 'border-slate-800'} rounded-lg p-3 cursor-pointer transition">
-                        <span class="text-sm ${checked ? 'line-through text-slate-400' : 'text-slate-200'}"><strong class="text-amber-400">${idx + 1}.</strong> ${step}</span>
-                        <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSkincareStep('${key}')" class="w-4 h-4 accent-emerald-500 rounded mt-0.5 cursor-pointer">
-                    </label>
-                `;
-            });
+        <!-- TAB 4: PROGRESS -->
+        <section id="tab-progress" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Weight Gain Trajectory (52kg → 60kg)</h2>
+                        <p class="text-sm text-slate-400">Latest logged weight: <span id="progress-latest-weight" class="font-bold text-emerald-400">52.0 kg</span></p>
+                    </div>
+                    <button onclick="openWeightModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">+ Add Weekly Weigh-In</button>
+                </div>
 
-            data.pm.forEach((step, idx) => {
-                const key = `pm_${idx}`;
-                const checked = completedSkincare[key] || false;
-                if (checked) done++;
-                pmContainer.innerHTML += `
-                    <label class="flex items-start justify-between gap-3 bg-slate-800/60 border ${checked ? 'border-emerald-600/50' : 'border-slate-800'} rounded-lg p-3 cursor-pointer transition">
-                        <span class="text-sm ${checked ? 'line-through text-slate-400' : 'text-slate-200'}"><strong class="text-indigo-400">${idx + 1}.</strong> ${step}</span>
-                        <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleSkincareStep('${key}')" class="w-4 h-4 accent-emerald-500 rounded mt-0.5 cursor-pointer">
-                    </label>
-                `;
-            });
+                <div class="h-72 w-full">
+                    <canvas id="weightChart"></canvas>
+                </div>
 
-            document.getElementById('skincare-progress-counter').innerText = `${done}/${total} Done`;
-        }
+                <div class="mt-6 pt-6 border-t border-slate-800">
+                    <h3 class="text-lg font-bold text-white mb-3">Weigh-In History</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="bg-slate-800 text-slate-400 uppercase text-xs">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-l-lg">Date / Week</th>
+                                    <th class="px-4 py-3">Weight (kg)</th>
+                                    <th class="px-4 py-3 rounded-r-lg text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weight-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        function initChart() {
-            const ctx = document.getElementById('weightChart').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: weightHistory.map(w => w.date),
-                    datasets: [{
-                        label: 'Body Weight (kg)',
-                        data: weightHistory.map(w => w.weight),
-                        borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#10b981',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { suggestedMin: 50, suggestedMax: 61, grid: { color: '#1e293b' }, ticks: { color: '#94a3b8' } },
-                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-                    },
-                    plugins: { legend: { labels: { color: '#f8fafc' } } }
-                }
-            });
-        }
+    <!-- Weight Update Modal -->
+    <div id="weight-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <h3 class="text-lg font-bold text-white">Log Weekly Weight</h3>
+            <p class="text-sm text-slate-400">Record your weight and date to update your progress chart.</p>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Date / Label</label>
+                <input type="text" id="modal-date-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. Nov 26">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Weight (kg)</label>
+                <input type="number" step="0.1" id="modal-weight-input" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500" placeholder="e.g. 52.5">
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="closeWeightModal()" class="px-4 py-2 text-slate-400 hover:text-white text-sm font-medium">Cancel</button>
+                <button onclick="saveNewWeight()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition">Save Entry</button>
+            </div>
+        </div>
+    </div>
 
-        function refreshChart() {
-            if (!chartInstance) {
-                initChart();
-                return;
-            }
-            chartInstance.data.labels = weightHistory.map(w => w.date);
-            chartInstance.data.datasets[0].data = weightHistory.map(w => w.weight);
-            chartInstance.resize();
-            chartInstance.update();
-        }
+    <script>
+        const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-        function renderWeightTable() {
-            const tbody = document.getElementById('weight-table-body');
-            tbody.innerHTML = '';
-            weightHistory.forEach((entry, idx) => {
-                tbody.innerHTML += `
-                    <tr class="border-b border-slate-800/60 hover:bg-slate-800/30">
-                        <td class="px-4 py-3 font-medium text-white">${entry.date}</td>
-                        <td class="px-4 py-3 font-bold text-emerald-400">${Number(entry.weight).toFixed(1)} kg</td>
-                        <td class="px-4 py-3 text-right">
-                            <button onclick="deleteWeightEntry(${idx})" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 px-2.5 py-1 rounded border border-red-900/50 transition">Delete</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        function openWeightModal() {
-            document.getElementById('weight-modal').classList.remove('hidden');
-            document.getElementById('weight-modal').classList.add('flex');
-        }
-
-        function closeWeightModal() {
-            document.getElementById('weight-modal').classList.add('hidden');
-            document.getElementById('weight-modal').classList.remove('flex');
-        }
-
-        function saveNewWeight() {
-            const dateVal = document.getElementById('modal-date-input').value.trim();
-            const weightVal = parseFloat(document.getElementById('modal-weight-input').value);
-            if (dateVal && !isNaN(weightVal)) {
-                weightHistory.push({ date: dateVal, weight: weightVal });
-                localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
-                updateDisplayWeight();
-                renderWeightTable();
-                refreshChart();
-                closeWeightModal();
-                document.getElementById('modal-weight-input').value = '';
-            }
-        }
-
-        function deleteWeightEntry(idx) {
-            if (weightHistory.length > 1) {
-                weightHistory.splice(idx, 1);
-                localStorage.setItem('shankar_weights', JSON.stringify(weightHistory));
-                updateDisplayWeight();
-                renderWeightTable();
-                refreshChart();
-            } else {
-                alert("You must keep at least one weight entry!");
-            }
-        }
-
-        function updateDisplayWeight() {
-            if (weightHistory.length > 0) {
-                const latest = Number(weightHistory[weightHistory.length - 1].weight).toFixed(1);
-                document.getElementById('current-weight-display').innerText = latest;
-                const tabLatest = document.getElementById('progress-latest-weight');
-                if (tabLatest) tabLatest.innerText = `${latest} kg`;
-            }
-        }
-    </script>
-</body>
-</html>
+        const workouts = {
+            "Monday": {
+                title: "Chest, Shoulder & Triceps",
+                desc: "Chest (3), Shoulder (2), Triceps (2)",
+                exercises: [
+                    { name: "Flat Barbell Bench Press", sets: "3 sets × 6-8 reps", type: "Chest (1/3)" },
+                    { name: "Incline Dumbbell Press", sets: "3 sets × 8-10 reps", type: "Chest (2/3)" },
+                    { name: "Low-to-High Cable Crossovers", sets: "3 sets × 12-15 reps", type: "Chest (3/3)" },
+                    { name: "Cable Lateral Raises", sets: "4 sets × 12-15 reps", type: "Shoulder (1/2)" },
+                    { name: "Reverse Pec Deck Flyes", sets: "3 sets × 12-15 reps", type: "Shoulder (2/2)" },
+                    { name: "Overhead Tricep Extension", sets: "3 sets × 10-12 reps", type: "Triceps (1/2)" },
+                    { name: "Tricep Cable Pushdowns", sets: "3 sets × 12-15 reps", type: "Triceps (2/2)" }
+                ]
+            },
+            "Tuesday": {
+                title: "Back, Biceps & Forearms",
+                desc: "Back (3), Biceps (2), Forearms (2)",
+                exercises: [
+                    { name: "Lat Pulldowns or Pull-Ups", sets: "3 sets × 8-10 reps", type: "Back (1/3)" },
+                    { name: "Chest-Supported Row", sets: "3 sets × 8-10 reps", type: "Back (2/3)" },
+                    { name: "Single-Arm Cable Row", sets: "3 sets × 10-12 reps", type: "Back (3/3)" },
+                    { name: "Standing Barbell Curl", sets: "3 sets × 10-12 reps", type: "Biceps (1/2)" },
+                    { name: "Incline Hammer Curl", sets: "3 sets × 12-15 reps", type: "Biceps (2/2)" },
+                    { name: "Reverse Barbell Curls", sets: "3 sets × 12-15 reps", type: "Forearms (1/2)" },
+                    { name: "Farmer's Carry / Wrist Curls", sets: "3 sets", type: "Forearms (2/2)" }
+                ]
+            },
+            "Wednesday": {
+                title: "Shoulder & Core",
+                desc: "Shoulder (5), Core (2)",
+                exercises: [
+                    { name: "Seated DB Overhead Press", sets: "3 sets × 6-8 reps", type: "Shoulder (1/5)" },
+                    { name: "Cable Lateral Raises", sets: "4 sets × 12-15 reps", type: "Shoulder (2/5)" },
+                    { name: "Dumbbell Lateral Raises", sets: "3 sets × 12-15 reps", type: "Shoulder (3/5)" },
+                    { name: "Reverse Pec Deck Flyes", sets: "3 sets × 12-15 reps", type: "Shoulder (4/5)" },
+                    { name: "Dumbbell Shrugs", sets: "3 sets × 10-12 reps", type: "Shoulder (5/5)" },
+                    { name: "Hanging Leg Raises", sets: "3 sets × 12-15 reps", type: "Core (1/2)" },
+                    { name: "Cable Woodchops", sets: "3 sets × 12-15 reps", type: "Core (2/2)" }
+                ]
+            },
+            "Thursday": {
+                title: "Chest & Triceps",
+                desc: "Chest (3), Triceps (3)",
+                exercises: [
+                    { name: "Incline Barbell Bench Press", sets: "3 sets × 6-8 reps", type: "Chest (1/3)" },
+                    { name: "Flat Dumbbell Press", sets: "3 sets × 8-10 reps", type: "Chest (2/3)" },
+                    { name: "Chest Dips or Machine Flyes", sets: "3 sets × 10-12 reps", type: "Chest (3/3)" },
+                    { name: "Close-Grip Bench Press", sets: "3 sets × 8-10 reps", type: "Triceps (1/3)" },
+                    { name: "Overhead 
