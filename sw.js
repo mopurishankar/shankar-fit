@@ -1,4 +1,4 @@
-const CACHE_NAME = 'shankar-fit-v6';
+const CACHE_NAME = 'shankar-fit-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
